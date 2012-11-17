@@ -8,7 +8,9 @@
     $(function() {
       $('#minimal select').zelect()
       $('#styled select').zelect().on('change', function(e, item) { $('#output').text(JSON.stringify(item)) })
-      $('#async select').asyncZelect({ loader:loader, renderItem:renderItem }).on('change', function(e, item) { $('#output').text(JSON.stringify(item)) })
+      $('#async select').asyncZelect({ loader:loader, renderItem:renderItem })
+        .on('change', function(e, item) { $('#output').text(JSON.stringify(item)) })
+        .on('ready', function() { $('#output').text('ready...') })
     })
 
     function loader(term, page, callback) {

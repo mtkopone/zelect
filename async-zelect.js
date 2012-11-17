@@ -43,7 +43,7 @@
 
       function selectItem($item) {
         var item = $item.data('zelect-item')
-        $selected.append(opts.renderItem(item))
+        $selected.html(opts.renderItem(item))
         hide()
         if (item.value) $select.val(item.value)
         $select.trigger('change', item)
@@ -81,6 +81,7 @@
     function load() {
       if (state.loading) return
       state.loading = true
+      $list.addClass('loading')
       var stateId = state.id
       loadFn(state.term, state.page, function(items) {
         if (stateId !== state.id) return
@@ -94,6 +95,7 @@
             if (moreRequired) {
               load()
             } else {
+              $list.removeClass('loading')
               state.callback = undefined
             }
           }
