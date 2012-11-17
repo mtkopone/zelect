@@ -1,0 +1,9 @@
+{
+  "name": "zelect",
+  "version": "0.0.1"
+  "dependencies": {
+  },
+  "devDependencies": {
+    "mocha": ">= 1.7.0"
+  }
+}

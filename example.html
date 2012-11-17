@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="jquery-1.8.3.min.js"></script>
+  <script src="zelect.js"></script>
+  <script>
+    $(function() {
+      $('select').zelect()
+
+      $('#styled select').on('change', function(e, item) { $('#output').text(JSON.stringify(item)) })
+    })
+  </script>
+  <style>
+    body { padding: 40px; }
+    body > div { margin-bottom: 20px; }
+    #output { min-width: 250px; min-height: 50px; float: right; margin: 10px; padding: 3px 5px; border: 1px dashed red; }
+
+    #styled .zelect {
+      cursor: pointer;
+      width: 200px;
+      line-height: 30px;
+      border: 1px solid black;
+      border-radius: 4px;
+      padding-left: 5px;
+    }
+    #styled ol {
+      padding-left: 0;
+      list-style-type: none;
+    }
+    #styled li {
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div id="output"></div>
+
+  <div id="minimal">
+    <select>
+      <option>First</option>
+      <option>Second</option>
+    </select>
+  </div>
+  <div id="styled">
+    <select>
+      <option>First</option>
+      <option>Second</option>
+      <option>And filtering</option>
+    </select>
+  </div>
+
+</body>
+</html>
