@@ -43,11 +43,7 @@
         .append($dropdown.append($search).append($list))
 
       itemHandler($search.val(), function() {
-        if (opts.placeholder) {
-          $selected.html(opts.placeholder).addClass('placeholder')
-        } else {
-          selectItem($list.find('li:first'))
-        }
+        initialSelection()
         $select.trigger('ready')
       })
 
@@ -85,12 +81,22 @@
           $list.append(opts.noResults(term))
         }
       }
+
+      function initialSelection() {
+        var $s = $select.find('option[selected="selected"]')
+        if (!opts.loader && $s.size() > 0) {
+          selectItem($list.children().eq($s.index()))
+        } else if (opts.placeholder) {
+          $selected.html(opts.placeholder).addClass('placeholder')
+        } else {
+          selectItem($list.find(':first'))
+        }
+      }
     })
   }
 
   function selectBased($select, $list, appendItemFn) {
     var options = $select.find('option').map(function() { return itemFromOption($(this)) }).get()
-    $.each(options, function(ii, item) { appendItemFn(item) })
 
     function filter(term) {
       var regexp = new RegExp('(^|\\s)'+term, 'i')
