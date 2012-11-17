@@ -99,10 +99,10 @@
     var options = $select.find('option').map(function() { return itemFromOption($(this)) }).get()
 
     function filter(term) {
-      var regexp = new RegExp('(^|\\s)'+term, 'i')
+      var check = (term == '') ? function() { return true } : new RegExp('(^|\\s)'+term, 'i').test
       $list.empty()
       $.each(options, function(ii, item) {
-        if (regexp.test(item.label)) appendItemFn(item)
+        if (check(item.label)) appendItemFn(item)
       })
     }
     function itemFromOption($option) {
