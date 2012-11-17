@@ -2,11 +2,16 @@
   opts:
     loader(term, page, callback): fn : load more items
     renderItem(item): fn : render the content of a single item
+    placeholder: "item": item to render as placeholder before anything is selected
+    throttle: ms to throttle filtering of results when search term updated
 */
 (function($) {
   var keys = { esc: 27 }
+  var defaults = { renderItem: defaultRenderItem, throttle: 300 }
 
-  $.fn.asyncZelect = function(opts) {
+  $.fn.zelect = function(opts) {
+    opts = $.extend({}, defaults, opts)
+
     return this.each(function() {
       var $select = $(this).hide()
 
@@ -16,14 +21,17 @@
       var $search = $('<input>').addClass('zearch')
       var $list = $('<ol>')
 
-      var loader = infiniteScroll($list, opts.loader, renderItem)
-      var throttledLoad = throttled(300, function() { loader($search.val()) })
+      var itemHandler = opts.loader
+        ? infiniteScroll($list, opts.loader, renderItem)
+        : selectBased($select, $list, renderItem)
+
+      var filter = throttled(opts.throttle, function() { itemHandler($.trim($search.val())) })
 
       $search.keyup(function(e) {
         if (e.which == keys.esc) {
           hide()
         } else {
-          throttledLoad()
+          filter()
         }
       })
 
@@ -35,18 +43,21 @@
         .append($selected)
         .append($dropdown.append($search).append($list))
 
-      loader($search.val(), function() {
-        selectItem($list.find('li:first'))
+      itemHandler($search.val(), function() {
+        if (opts.placeholder) {
+          $selected.html(opts.renderItem(opts.placeholder)).addClass('placeholder')
+        } else {
+          selectItem($list.find('li:first'))
+        }
         $select.trigger('ready')
-        return false
       })
 
       function selectItem($item) {
         var item = $item.data('zelect-item')
-        $selected.html(opts.renderItem(item))
+        $selected.html(opts.renderItem(item)).removeClass('placeholder')
         hide()
         if (item.value) $select.val(item.value)
-        $select.trigger('change', item)
+        $select.data('zelected', item).trigger('change', item)
       }
 
       function toggle() {
@@ -65,11 +76,27 @@
       function renderItem(item) {
         return $('<li>').data('zelect-item', item).append(opts.renderItem(item))
       }
-
-      function itemFromOption($e) {
-        return { id: $e.attr('value'), label: $e.text() }
-      }
     })
+  }
+
+  function selectBased($select, $list, renderItemFn) {
+    $select.find('option').each(function() {
+      $list.append(renderItemFn(itemFromOption($(this))))
+    })
+    function itemFromOption($e) {
+      return { value: $e.attr('value'), label: $e.text() }
+    }
+    function filter(term) {
+      var regexp = new RegExp('(^|\\s)'+term, 'i')
+      $list.find('li').each(function() {
+        var $li = $(this)
+        $li.toggle(regexp.test($li.text()))
+      })
+    }
+    return function(term, callback) {
+      filter(term)
+      if (callback) callback()
+    }
   }
 
   function infiniteScroll($list, loadFn, renderItemFn) {
@@ -103,8 +130,8 @@
       return lastElementVisible
     }
 
-    return function(t, callback) {
-      state = { id:state.id+1, term:t, page:0, loading:false, callback:callback }
+    return function(term, callback) {
+      state = { id:state.id+1, term:term, page:0, loading:false, callback:callback }
       load()
     }
   }
@@ -114,6 +141,14 @@
     return function() {
       if (timeout) clearTimeout(timeout)
       timeout = setTimeout(callback, ms)
+    }
+  }
+
+  function defaultRenderItem(item) {
+    if ($.type(item) === 'string') {
+      return item
+    } else if (item.label) {
+      return item.label
     }
   }
 

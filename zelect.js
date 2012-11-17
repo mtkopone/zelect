@@ -1,7 +1,7 @@
 (function($) {
   var keys = { esc: 27 }
 
-  $.fn.zelect = function(opts) {
+  $.fn.oldZelect = function(opts) {
     return this.each(function() {
       var $select = $(this).hide()
 

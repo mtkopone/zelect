@@ -7,8 +7,8 @@
   <script>
     $(function() {
       $('#minimal select').zelect()
-      $('#styled select').zelect().on('change', function(e, item) { $('#output').text(JSON.stringify(item)) })
-      $('#async select').asyncZelect({ loader:loader, renderItem:renderItem })
+      $('#styled select').zelect({ placeholder:'Please zelect...'}).on('change', function(e, item) { $('#output').text(JSON.stringify(item)) })
+      $('#async select').zelect({ loader:loader, renderItem:renderItem })
         .on('change', function(e, item) { $('#output').text(JSON.stringify(item)) })
         .on('ready', function() { $('#output').text('ready...') })
     })
@@ -39,6 +39,7 @@
       border-radius: 4px;
       padding-left: 5px;
     }
+    #styled .placeholder { color: lightgray; }
     #async ol,
     #styled ol {
       padding-left: 0;
@@ -57,6 +58,15 @@
 <body>
   <div id="output"></div>
 
+  <div>
+    This is an actual select:
+    <select>
+      <option>--</option>
+      <option>First</option>
+      <option>Second</option>
+      <option>Third</option>
+    </select>
+  </div>
   <div id="minimal">
     <select>
       <option>First</option>
