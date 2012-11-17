@@ -3,19 +3,33 @@
 <head>
   <script src="jquery-1.8.3.min.js"></script>
   <script src="zelect.js"></script>
+  <script src="async-zelect.js"></script>
   <script>
     $(function() {
-      $('select').zelect()
-
-      $('#styled select').on('change', function(e, item) { $('#output').text(JSON.stringify(item)) })
+      $('#minimal select').zelect()
+      $('#styled select').zelect().on('change', function(e, item) { $('#output').text(JSON.stringify(item)) })
+      $('#async select').asyncZelect({ loader:loader, renderItem:renderItem }).on('change', function(e, item) { $('#output').text(JSON.stringify(item)) })
     })
+
+    function loader(term, page, callback) {
+      console.log('load '+term+':'+page)
+      var results = ['foo', 'bar', 'baz', 'zap', 'ouch']
+      setTimeout(function() {
+        var arr = $.map(results, function(e, ii) { return { id:ii, value:term+':'+page+' '+e } })
+        callback(arr)
+      }, 200)
+    }
+
+    function renderItem(item) {
+      return item.value
+    }
   </script>
   <style>
     body { padding: 40px; }
     body > div { margin-bottom: 20px; }
     #output { min-width: 250px; min-height: 50px; float: right; margin: 10px; padding: 3px 5px; border: 1px dashed red; }
 
-    #styled .zelect {
+    #async .zelect, #styled .zelect {
       cursor: pointer;
       width: 200px;
       line-height: 30px;
@@ -23,12 +37,18 @@
       border-radius: 4px;
       padding-left: 5px;
     }
+    #async ol,
     #styled ol {
       padding-left: 0;
       list-style-type: none;
     }
+    #async li,
     #styled li {
       cursor: pointer;
+    }
+    #async ol {
+      max-height: 100px;
+      overflow-y: scroll;
     }
   </style>
 </head>
@@ -48,6 +68,8 @@
       <option>And filtering</option>
     </select>
   </div>
-
+  <div id="async">
+    <select></select>
+  </div>
 </body>
 </html>
