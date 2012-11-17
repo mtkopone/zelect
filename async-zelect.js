@@ -27,19 +27,11 @@
 
       var filter = throttled(opts.throttle, function() {
         var term = $.trim($search.val())
-        itemHandler(term, function() {
-          if ($list.children().size() === 0) {
-            $list.append(opts.noResults(term))
-          }
-        })
+        itemHandler(term, checkForNoResults)
       })
 
       $search.keyup(function(e) {
-        if (e.which == keys.esc) {
-          hide()
-        } else {
-          filter()
-        }
+        (e.which === keys.esc) ? hide() : filter()
       })
 
       $list.on('click', 'li', function() { selectItem($(this) )})
@@ -86,6 +78,12 @@
 
       function renderItem(item) {
         return $('<li>').data('zelect-item', item).append(opts.renderItem(item))
+      }
+
+      function checkForNoResults() {
+        if ($list.children().size() === 0) {
+          $list.append(opts.noResults(term))
+        }
       }
     })
   }
