@@ -1,7 +1,7 @@
 /*
   opts:
-    loader(term, page, callback): load more items
-    renderItem(item): render the content of a single item
+    loader(term, page, callback): fn : load more items
+    renderItem(item): fn : render the content of a single item
 */
 (function($) {
   var keys = { esc: 27 }
@@ -58,7 +58,6 @@
       }
 
       function hide() {
-        console.log('hide')
         $dropdown.hide()
         $zelect.removeClass('open')
       }
@@ -90,15 +89,9 @@
         $.each(items, function(ii, item) { $list.append(renderItemFn(item)) })
         state.loading = false
         if (!maybeLoadMore()) {
-          if (state.callback) {
-            var moreRequired = state.callback()
-            if (moreRequired) {
-              load()
-            } else {
-              $list.removeClass('loading')
-              state.callback = undefined
-            }
-          }
+          if (state.callback) state.callback()
+          state.callback = undefined
+          $list.removeClass('loading')
         }
       })
     }
