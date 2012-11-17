@@ -2,12 +2,12 @@
   opts:
     loader(term, page, callback): fn : load more items
     renderItem(item): fn : render the content of a single item
-    placeholder: "item": item to render as placeholder before anything is selected
+    placeholder: String/DOM/jQuery: placeholder (text) before anything is selected. Automatically selects first item if not provided.
     throttle: ms to throttle filtering of results when search term updated
 */
 (function($) {
   var keys = { esc: 27 }
-  var defaults = { renderItem: defaultRenderItem, throttle: 300 }
+  var defaults = { renderItem: defaultRenderItem, throttle: 300, noResults: defaultNoResults }
 
   $.fn.zelect = function(opts) {
     opts = $.extend({}, defaults, opts)
@@ -22,10 +22,17 @@
       var $list = $('<ol>')
 
       var itemHandler = opts.loader
-        ? infiniteScroll($list, opts.loader, renderItem)
-        : selectBased($select, $list, renderItem)
+        ? infiniteScroll($list, opts.loader, appendItem)
+        : selectBased($select, $list, appendItem)
 
-      var filter = throttled(opts.throttle, function() { itemHandler($.trim($search.val())) })
+      var filter = throttled(opts.throttle, function() {
+        var term = $.trim($search.val())
+        itemHandler(term, function() {
+          if ($list.children().size() === 0) {
+            $list.append(opts.noResults(term))
+          }
+        })
+      })
 
       $search.keyup(function(e) {
         if (e.which == keys.esc) {
@@ -45,7 +52,7 @@
 
       itemHandler($search.val(), function() {
         if (opts.placeholder) {
-          $selected.html(opts.renderItem(opts.placeholder)).addClass('placeholder')
+          $selected.html(opts.placeholder).addClass('placeholder')
         } else {
           selectItem($list.find('li:first'))
         }
@@ -73,25 +80,29 @@
         $zelect.removeClass('open')
       }
 
+      function appendItem(item) {
+        $list.append(renderItem(item))
+      }
+
       function renderItem(item) {
         return $('<li>').data('zelect-item', item).append(opts.renderItem(item))
       }
     })
   }
 
-  function selectBased($select, $list, renderItemFn) {
-    $select.find('option').each(function() {
-      $list.append(renderItemFn(itemFromOption($(this))))
-    })
-    function itemFromOption($e) {
-      return { value: $e.attr('value'), label: $e.text() }
-    }
+  function selectBased($select, $list, appendItemFn) {
+    var options = $select.find('option').map(function() { return itemFromOption($(this)) }).get()
+    $.each(options, function(ii, item) { appendItemFn(item) })
+
     function filter(term) {
       var regexp = new RegExp('(^|\\s)'+term, 'i')
-      $list.find('li').each(function() {
-        var $li = $(this)
-        $li.toggle(regexp.test($li.text()))
+      $list.empty()
+      $.each(options, function(ii, item) {
+        if (regexp.test(item.label)) appendItemFn(item)
       })
+    }
+    function itemFromOption($option) {
+      return { value: $option.attr('value'), label: $option.text() }
     }
     return function(term, callback) {
       filter(term)
@@ -99,13 +110,13 @@
     }
   }
 
-  function infiniteScroll($list, loadFn, renderItemFn) {
-    var state = { id:0, term:'', page:0, loading:false, callback:undefined }
+  function infiniteScroll($list, loadFn, appendItemFn) {
+    var state = { id:0, term:'', page:0, loading:false, exhausted:false, callback:undefined }
 
     $list.scroll(maybeLoadMore)
 
     function load() {
-      if (state.loading) return
+      if (state.loading || state.exhausted) return
       state.loading = true
       $list.addClass('loading')
       var stateId = state.id
@@ -113,7 +124,8 @@
         if (stateId !== state.id) return
         if (state.page == 0) $list.empty()
         state.page++
-        $.each(items, function(ii, item) { $list.append(renderItemFn(item)) })
+        if (!items || items.length === 0) state.exhausted = true
+        $.each(items, function(ii, item) { appendItemFn(item) })
         state.loading = false
         if (!maybeLoadMore()) {
           if (state.callback) state.callback()
@@ -124,14 +136,15 @@
     }
 
     function maybeLoadMore() {
-      var lastElementTop = $list.children().last().offset().top - $list.offset().top
-      var lastElementVisible = lastElementTop < $list.outerHeight()
-      if (lastElementVisible) load()
-      return lastElementVisible
+      if (state.exhausted) return false
+      var lastChildTop = $list.children(':last').offset().top - $list.offset().top
+      var lastChildVisible = lastChildTop < $list.outerHeight()
+      if (lastChildVisible) load()
+      return lastChildVisible
     }
 
     return function(term, callback) {
-      state = { id:state.id+1, term:term, page:0, loading:false, callback:callback }
+      state = { id:state.id+1, term:term, page:0, loading:false, exhausted:false, callback:callback }
       load()
     }
   }
@@ -149,7 +162,15 @@
       return item
     } else if (item.label) {
       return item.label
+    } else if (item.toString) {
+      return item.toString()
+    } else {
+      return item
     }
+  }
+
+  function defaultNoResults(term) {
+    return $('<li>').addClass('no-results').text("No results for '"+term+"'")
   }
 
 })(jQuery)

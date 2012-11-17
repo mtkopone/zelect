@@ -15,6 +15,7 @@
 
     function loader(term, page, callback) {
       console.log('load '+term+':'+page)
+      if (term == 'empty') return callback([])
       var results = ['foo', 'bar', 'baz', 'zap', 'ouch']
       setTimeout(function() {
         var arr = $.map(results, function(e, ii) { return { id:ii, value:term+':'+page+' '+e } })
