@@ -170,6 +170,18 @@ describe('zelect', function() {
       html('.zelected', '<pre>First</pre>')
     })
 
+    it('renderItem can e.g. highlight option matches', function() {
+      setup('with-several-options')
+      $('#select').zelect({ throttle:0, renderItem:function(item, term) {
+        var re = new RegExp('\\b('+term+')', 'i')
+        return item.label.replace(re, '<em>$1</em>')
+      }})
+      $('.zelected').click()
+      $('.zearch').val('is').keyup()
+      items(['This is first', 'Here is second', "Isn't fifth"])
+      html('.dropdown li:first', 'This <em>is</em> first')
+    })
+
     it('regexpMatcher', function() {
       setup('with-two-options')
       $('#select').zelect({ throttle:0, regexpMatcher:function(term) { return new RegExp(term) } })

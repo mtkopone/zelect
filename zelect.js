@@ -1,7 +1,7 @@
 /*
   opts:
     loader(term, page, callback): fn : load more items
-    renderItem(item): fn : render the content of a single item
+    renderItem(item, term?): fn : render the content of a single item
     placeholder: String/DOM/jQuery: placeholder (text) before anything is selected. Automatically selects first item if not provided.
     throttle: ms : to throttle filtering of results when search term updated
     noResults: fn : function to create no results text
@@ -76,12 +76,9 @@
         $zelect.removeClass('open')
       }
 
-      function appendItem(item) {
-        $list.append(renderItem(item))
-      }
-
-      function renderItem(item) {
-        return $('<li>').data('zelect-item', item).append(opts.renderItem(item))
+      function appendItem(item, term) {
+        var $item = $('<li>').data('zelect-item', item).append(opts.renderItem(item, term))
+        $list.append($item)
       }
 
       function checkForNoResults(term) {
@@ -113,7 +110,7 @@
       var regexp = (term === '') ? dummyRegexp : regexpMatcher(term)
       $list.empty()
       $.each(options, function(ii, item) {
-        if (regexp.test(item.label)) appendItemFn(item)
+        if (regexp.test(item.label)) appendItemFn(item, term)
       })
     }
     function itemFromOption($option) {
@@ -141,7 +138,7 @@
         if (state.page == 0) $list.empty()
         state.page++
         if (!items || items.length === 0) state.exhausted = true
-        $.each(items, function(ii, item) { appendItemFn(item) })
+        $.each(items, function(ii, item) { appendItemFn(item, state.term) })
         state.loading = false
         if (!maybeLoadMore()) {
           if (state.callback) state.callback()
@@ -182,7 +179,7 @@
     }
   }
 
-  function defaultRenderItem(item) {
+  function defaultRenderItem(item, term) {
     if (item == undefined || item == null) {
       return ''
     } else if ($.type(item) === 'string') {
