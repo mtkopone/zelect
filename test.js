@@ -45,9 +45,8 @@ describe('zelect', function() {
         eq(item, expected)
         visible('.zelected')
         hidden('.dropdown')
-        txt('.zelected', 'Last')
         val('#select', 'Last')
-        eq($('#select').data('zelected'), expected)
+        selectionIs('Last', expected)
         done()
       })
       $('.zelected').click()
@@ -168,6 +167,21 @@ describe('zelect', function() {
       html('.dropdown li:first', '<pre>First</pre>')
       html('.zelected', '<pre>First</pre>')
     })
+    it('can initially be set to an arbitrary item', function() {
+      var initial = { label:'something completely different', value:'pow'}
+      var changeChecked = false
+      setup('with-two-options')
+      $('#select').on('change', function(e, item) {
+        eq(item, initial)
+        selectionIs('something completely different', initial)
+        changeChecked = true
+      })
+      $('#select').zelect({ initial:initial })
+      selectionIs('something completely different', initial)
+      // <select> val can't be changed to an option that doesnt exist:
+      val('#select', 'First')
+      assert.isTrue(changeChecked)
+    })
   })
 
   describe('This and that', function() {
@@ -209,10 +223,10 @@ describe('zelect', function() {
     assert.deepEqual(a,b, msg)
   }
   function txt(locator, expected) {
-    eq($(locator).text(), expected)
+    eq($(locator).text(), expected, locator+'.text()')
   }
   function val(locator, expected) {
-    eq($(locator).val(), expected)
+    eq($(locator).val(), expected, locator+'.val()')
   }
   function html(locator, expected) {
     eq($(locator).html(), expected)
@@ -237,6 +251,10 @@ describe('zelect', function() {
     $.each(arr, function(ii, e) {
       txt('.dropdown li:eq('+ii+')', e)
     })
+  }
+  function selectionIs(string, item) {
+    txt('.zelected', string)
+    eq($('#select').data('zelected'), item)
   }
 
 })

@@ -5,6 +5,7 @@
     placeholder: String/DOM/jQuery: placeholder (text) before anything is selected. Automatically selects first item if not provided.
     throttle: ms : to throttle filtering of results when search term updated
     noResults: fn : function to create no results text
+    initial: item : arbitraty item to set the initial selection to
 */
 (function($) {
   var keys = { esc: 27 }
@@ -86,7 +87,9 @@
 
       function initialSelection() {
         var $s = $select.find('option[selected="selected"]')
-        if (!opts.loader && $s.size() > 0) {
+        if (opts.initial) {
+          selectItem($('<li>').data('zelect-item', opts.initial))
+        } else if (!opts.loader && $s.size() > 0) {
           selectItem($list.children().eq($s.index()))
         } else if (opts.placeholder) {
           $selected.html(opts.placeholder).addClass('placeholder')
