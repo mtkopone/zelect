@@ -7,15 +7,7 @@ describe('zelect', function() {
     })
 
     it('renders', function() {
-      hidden('#select')
-      visible('.zelect')
-      visible('.zelected')
-      hidden('.dropdown')
-      hidden('.zearch')
-      txt('.zelected', 'First')
-      val('.zearch', '')
-      val('.zearch', '')
-      items(['First','Last'])
+      defaultInitialState()
     })
 
     it('shows dropdown on click', function() {
@@ -263,6 +255,16 @@ describe('zelect', function() {
         .val('12').keyup()
         .val('123').keyup()
     })
+
+    it('can be set up in a detached DOM node', function() {
+      setup('with-two-options')
+      $('#select').wrap($('<div>').attr('id', 'parent'))
+      var $parent = $('#parent').detach()
+
+      $parent.find('#select').zelect()
+      $('#sut').append($parent)
+      defaultInitialState()
+    })
   })
   function eq(a,b, msg) {
     assert.deepEqual(a,b, msg)
@@ -300,6 +302,17 @@ describe('zelect', function() {
   function selectionIs(string, item) {
     txt('.zelected', string)
     eq($('#select').data('zelected'), item)
+  }
+  function defaultInitialState() {
+    hidden('#select')
+    visible('.zelect')
+    visible('.zelected')
+    hidden('.dropdown')
+    hidden('.zearch')
+    txt('.zelected', 'First')
+    val('.zearch', '')
+    val('.zearch', '')
+    items(['First','Last'])
   }
 
 })
