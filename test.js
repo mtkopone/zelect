@@ -170,6 +170,16 @@ describe('zelect', function() {
       html('.zelected', '<pre>First</pre>')
     })
 
+    it('regexpMatcher', function() {
+      setup('with-two-options')
+      $('#select').zelect({ throttle:0, regexpMatcher:function(term) { return new RegExp(term) } })
+      $('.zelected').click()
+      $('.zearch').val('ast').keyup()
+      items(['Last'])
+      $('.zearch').val('s').keyup()
+      items(['First', 'Last'])
+    })
+
     it('can initially be set to an arbitrary item', function() {
       var initial = { label:'something completely different', value:'pow'}
       var changeChecked = false

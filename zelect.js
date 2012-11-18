@@ -6,10 +6,16 @@
     throttle: ms : to throttle filtering of results when search term updated
     noResults: fn : function to create no results text
     initial: item : arbitraty item to set the initial selection to
+    regexpMatcher: fn: override regexp creation when filtering options
 */
 (function($) {
   var keys = { esc: 27 }
-  var defaults = { renderItem: defaultRenderItem, throttle: 300, noResults: defaultNoResults }
+  var defaults = {
+    throttle: 300,
+    renderItem: defaultRenderItem,
+    noResults: defaultNoResults,
+    regexpMatcher: defaultRegexpMatcher
+  }
 
   $.fn.zelect = function(opts) {
     opts = $.extend({}, defaults, opts)
@@ -25,7 +31,7 @@
 
       var itemHandler = opts.loader
         ? infiniteScroll($list, opts.loader, appendItem)
-        : selectBased($select, $list, appendItem)
+        : selectBased($select, $list, opts.regexpMatcher, appendItem)
 
       var filter = throttled(opts.throttle, function() {
         var term = $.trim($search.val())
@@ -99,12 +105,12 @@
     })
   }
 
-  function selectBased($select, $list, appendItemFn) {
+  function selectBased($select, $list, regexpMatcher, appendItemFn) {
     var dummyRegexp = { test: function() { return true } }
     var options = $select.find('option').map(function() { return itemFromOption($(this)) }).get()
 
     function filter(term) {
-      var regexp = (term === '') ? dummyRegexp : new RegExp('(^|\\s)'+term, 'i')
+      var regexp = (term === '') ? dummyRegexp : regexpMatcher(term)
       $list.empty()
       $.each(options, function(ii, item) {
         if (regexp.test(item.label)) appendItemFn(item)
@@ -192,6 +198,10 @@
 
   function defaultNoResults(term) {
     return $('<li>').addClass('no-results').text("No results for '"+term+"'")
+  }
+
+  function defaultRegexpMatcher(term) {
+    return new RegExp('(^|\\s)'+term, 'i')
   }
 
 })(jQuery)
