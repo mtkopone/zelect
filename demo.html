@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+  <script src="./zelect.js"></script>
+  <link rel="stylesheet" href="http://css.cdn.tl/normalize.css" />
+  <style>
+    body { font-size: 16px; color: #1e1f19; background-color: #f3f3f3; padding: 10px 20px; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; }
+    h2, h3, h4 { color: #464646; }
+    section { margin-bottom: 40px; }
+    section:after { content: "."; display: block; height: 0; clear: both; visibility: hidden; }
+
+    #intro .zelect {
+      display: inline-block;
+      background-color: white;
+      min-width: 300px;
+      cursor: pointer;
+      line-height: 36px;
+      border: 1px solid #dbdece;
+      border-radius: 6px;
+      position: relative;
+    }
+    #intro .zelected {
+      font-weight: bold;
+      padding-left: 10px;
+    }
+    #intro .zelected.placeholder {
+      color: #999f82;
+    }
+    #intro .zelected:hover {
+      border-color: #c0c4ab;
+      box-shadow: inset 0px 5px 8px -6px #dbdece;
+    }
+    #intro .zelect.open {
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+    #intro .dropdown {
+      background-color: white;
+      border-bottom-left-radius: 5px;
+      border-bottom-right-radius: 5px;
+      border: 1px solid #dbdece;
+      border-top: none;
+      position: absolute;
+      left:-1px;
+      right:-1px;
+      top: 36px;
+      z-index: 2;
+      padding: 3px 5px 3px 3px;
+    }
+    #intro .dropdown input {
+      font-family: sans-serif;
+      outline: none;
+      font-size: 14px;
+      border-radius: 4px;
+      border: 1px solid #dbdece;
+      box-sizing: border-box;
+      width: 100%;
+      padding: 7px 0 7px 10px;
+    }
+    #intro .dropdown ol {
+      padding: 0;
+      margin: 3px 0 0 0;
+      list-style-type: none;
+      max-height: 150px;
+      overflow-y: scroll;
+    }
+    #intro .dropdown li {
+      padding-left: 10px;
+    }
+    #intro .dropdown li:hover {
+      background-color: #e9ebe1;
+    }
+  </style>
+  <script>
+    $(setup)
+
+    function setup() {
+      $('#intro select').zelect({ placeholder:'Plz select...' })
+    }
+  </script>
+</head>
+<body>
+  <section id="intro">
+    <h2>$('select').zelect()</h2>
+    <select>
+      <option>I really have</option>
+      <option>to think of some</option>
+      <option>significantly more</option>
+      <option>relevant example data</option>
+      <option>here.</option>
+      <option>Also, need more and longer items</option>
+      <option>to demo scroll</option>
+    </select>
+  </section>
+</body>
+</html>
