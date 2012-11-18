@@ -1,6 +1,16 @@
 # <span style="font-family: Consolas,'Liberation Mono',Courier,monospace">$('select').zelect()</span>
 
+It's just yet another &lt;select&gt;.
+
 <a href="http://mtkopone.github.com/zelect/">&gt;&gt;&gt; Example &lt;&lt;&lt;</a>
+
+* Small, < 200 LOC
+* Zero base CSS, roll your own
+* Customizable (well, at least workaroundable)
+* Handles asyncronous paged loading of large option lists (read: AJAX-ready-and-enabled)
+* Initializable in a detached or hidden DOM node
+* Programmatically selectable
+* <a href="https://github.com/mtkopone/zelect/blob/master/test.js">Unit-tested</a>
 
 ## <span style="font-family: Consolas,'Liberation Mono',Courier,monospace">for opts in $.fn.zelect(opts)</span>
 
@@ -50,8 +60,9 @@ $('#select-backed-zelect').zelect({
 })
 ```
 
-Callback expects an array. Elements in the array can be anything that renderItem can render.
+Callback expects an array. Elements in the array can be anything that renderItem can handle.
 
+zelect will load the next page of results from `opts.loader` whenever the option list is scrolled to the bottom. It will stop trying to load more once the callback is called with an empty array.
 
 ## Subscribing to Changes
 
@@ -68,6 +79,13 @@ These events are triggered on the &lt;select&gt;-element:
 If the zelect is &lt;select&gt;-backed, `$('select').val()` will return the _value_ of the currently selected option.
 
 `$('select').data('zelect-item')` will always return the currently selected _item_.
+
+
+## Styling
+
+zelect comes with **no** base css. Make your own.
+
+For inspiration, see <a href="http://mtkopone.github.com/zelect/">an example</a>.
 
 
 ## Initial Selection
@@ -138,5 +156,6 @@ function noResultser(term) {
   return $('<span>').addClass('no-results').text(term + "didn't hit anything.")
 }
 ```
+
 
 Enjoy
