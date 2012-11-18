@@ -1,12 +1,15 @@
 /*
   opts:
-    loader(term, page, callback): fn : load more items
-    renderItem(item, term?): fn : render the content of a single item
-    placeholder: String/DOM/jQuery: placeholder (text) before anything is selected. Automatically selects first item if not provided.
-    throttle: ms : to throttle filtering of results when search term updated
-    noResults: fn : function to create no results text
-    initial: item : arbitrary item to set the initial selection to
-    regexpMatcher: fn: override regexp creation when filtering options
+    throttle:       ms: delay to throttle filtering of results when search term updated
+    loader:         function(term, page, callback): load more items
+                      callback expects an array of items
+    renderItem:     function(item, term): render the content of a single item
+    initial:        "item": arbitrary item to set the initial selection to
+                      placeholder is not required if initial item is provided
+    placeholder:    String/DOM/jQuery: placeholder text/html before anything is selected
+                      zelect automatically selects first item if not provided
+    noResults:      function(term): function to create no results text
+    regexpMatcher:  function(term): override regexp creation when filtering options
 */
 (function($) {
   var keys = { esc: 27 }
