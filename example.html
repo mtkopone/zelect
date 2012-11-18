@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <script src="jquery-1.8.3.min.js"></script>
+  <script src="node_modules/jquery-browser/lib/jquery.js"></script>
   <script src="zelect.js"></script>
-  <script src="async-zelect.js"></script>
   <script>
     $(function() {
       $('#minimal select').zelect()
@@ -16,6 +15,7 @@
     function loader(term, page, callback) {
       console.log('load '+term+':'+page)
       if (term == 'empty') return callback([])
+      if (term == 'exhaust' && page == 3) return callback([])
       var results = ['foo', 'bar', 'baz', 'zap', 'ouch']
       setTimeout(function() {
         var arr = $.map(results, function(e, ii) { return { id:ii, value:term+':'+page+' '+e } })
@@ -38,9 +38,24 @@
       line-height: 30px;
       border: 1px solid black;
       border-radius: 4px;
-      padding-left: 5px;
+      position: relative;
     }
     #styled .placeholder { color: lightgray; }
+    #styled .zelect.open {
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+    #styled .dropdown {
+      border-bottom-left-radius: 4px;
+      border-bottom-right-radius: 4px;
+      border: 1px solid black;
+      position: absolute;
+      left:-1px;
+      right:-1px;
+      top: 30px;
+      background-color: yellow;
+      z-index: 2;
+    }
     #async ol,
     #styled ol {
       padding-left: 0;
@@ -50,7 +65,7 @@
     #styled li {
       cursor: pointer;
     }
-    #async ol {
+    #async ol, #styled ol {
       max-height: 100px;
       overflow-y: scroll;
     }
@@ -69,6 +84,10 @@
       <option>First</option>
       <option>Second</option>
       <option>And filtering</option>
+      <option>and now</option>
+      <option>for something</option>
+      <option>completely</option>
+      <option>different</option>
     </select>
   </div>
   <div id="async">

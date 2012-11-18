@@ -1,7 +1,18 @@
+/*
+  opts:
+    loader(term, page, callback): fn : load more items
+    renderItem(item): fn : render the content of a single item
+    placeholder: String/DOM/jQuery: placeholder (text) before anything is selected. Automatically selects first item if not provided.
+    throttle: ms : to throttle filtering of results when search term updated
+    noResults: fn : function to create no results text
+*/
 (function($) {
   var keys = { esc: 27 }
+  var defaults = { renderItem: defaultRenderItem, throttle: 300, noResults: defaultNoResults }
 
-  $.fn.oldZelect = function(opts) {
+  $.fn.zelect = function(opts) {
+    opts = $.extend({}, defaults, opts)
+
     return this.each(function() {
       var $select = $(this).hide()
 
@@ -11,44 +22,47 @@
       var $search = $('<input>').addClass('zearch')
       var $list = $('<ol>')
 
-      $select.find('option').each(function() {
-        $list.append(renderItem(itemFromOption($(this))))
+      var itemHandler = opts.loader
+        ? infiniteScroll($list, opts.loader, appendItem)
+        : selectBased($select, $list, appendItem)
+
+      var filter = throttled(opts.throttle, function() {
+        var term = $.trim($search.val())
+        itemHandler.load(term, function() { checkForNoResults(term) })
       })
 
       $search.keyup(function(e) {
-        if (e.which == keys.esc) hide()
-        else filter($search.val())
+        (e.which === keys.esc) ? hide() : filter()
       })
 
       $list.on('click', 'li', function() { selectItem($(this) )})
 
       $selected.click(toggle)
 
-      selectItem($list.find('li:first'))
-
-      $zelect.append($selected)
+      $zelect.insertAfter($select)
+        .append($selected)
         .append($dropdown.append($search).append($list))
-        .insertAfter($select)
 
-      function filter(term) {
-        var regexp = new RegExp('(^|\s)'+term, 'i')
-        $list.find('li').each(function() {
-          var $li = $(this)
-          $li.toggle(regexp.test($li.text()))
-        })
-      }
+      itemHandler.load($search.val(), function() {
+        initialSelection()
+        $select.trigger('ready')
+      })
 
       function selectItem($item) {
-        $selected.text($item.text())
-        hide()
         var item = $item.data('zelect-item')
-        $select.val(item.id).trigger('change', item)
+        $selected.html(opts.renderItem(item)).removeClass('placeholder')
+        hide()
+        if (item && item.value) $select.val(item.value)
+        $select.data('zelected', item).trigger('change', item)
       }
 
       function toggle() {
         $dropdown.toggle()
         $zelect.toggleClass('open')
-        if ($dropdown.is(':visible')) $search.focus()
+        if ($dropdown.is(':visible')) {
+          $search.focus().select()
+          itemHandler.check()
+        }
       }
 
       function hide() {
@@ -56,14 +70,119 @@
         $zelect.removeClass('open')
       }
 
+      function appendItem(item) {
+        $list.append(renderItem(item))
+      }
+
       function renderItem(item) {
-        return $('<li>').data('zelect-item', item).text(item.label)
+        return $('<li>').data('zelect-item', item).append(opts.renderItem(item))
       }
 
-      function itemFromOption($e) {
-        return { id: $e.attr('value'), label: $e.text() }
+      function checkForNoResults(term) {
+        if ($list.children().size() === 0) {
+          $list.append(opts.noResults(term))
+        }
       }
 
+      function initialSelection() {
+        var $s = $select.find('option[selected="selected"]')
+        if (!opts.loader && $s.size() > 0) {
+          selectItem($list.children().eq($s.index()))
+        } else if (opts.placeholder) {
+          $selected.html(opts.placeholder).addClass('placeholder')
+        } else {
+          selectItem($list.find(':first'))
+        }
+      }
     })
   }
+
+  function selectBased($select, $list, appendItemFn) {
+    var dummyRegexp = { test: function() { return true } }
+    var options = $select.find('option').map(function() { return itemFromOption($(this)) }).get()
+
+    function filter(term) {
+      var regexp = (term === '') ? dummyRegexp : new RegExp('(^|\\s)'+term, 'i')
+      $list.empty()
+      $.each(options, function(ii, item) {
+        if (regexp.test(item.label)) appendItemFn(item)
+      })
+    }
+    function itemFromOption($option) {
+      return { value: $option.attr('value'), label: $option.text() }
+    }
+    function newTerm(term, callback) {
+      filter(term)
+      if (callback) callback()
+    }
+    return { load:newTerm, check:function() {} }
+  }
+
+  function infiniteScroll($list, loadFn, appendItemFn) {
+    var state = { id:0, term:'', page:0, loading:false, exhausted:false, callback:undefined }
+
+    $list.scroll(maybeLoadMore)
+
+    function load() {
+      if (state.loading || state.exhausted) return
+      state.loading = true
+      $list.addClass('loading')
+      var stateId = state.id
+      loadFn(state.term, state.page, function(items) {
+        if (stateId !== state.id) return
+        if (state.page == 0) $list.empty()
+        state.page++
+        if (!items || items.length === 0) state.exhausted = true
+        $.each(items, function(ii, item) { appendItemFn(item) })
+        state.loading = false
+        if (!maybeLoadMore()) {
+          if (state.callback) state.callback()
+          state.callback = undefined
+          $list.removeClass('loading')
+        }
+      })
+    }
+
+    function maybeLoadMore() {
+      if (state.exhausted) return false
+      var lastChildTop = $list.children(':last').offset().top - $list.offset().top
+      var lastChildVisible = lastChildTop < $list.outerHeight()
+      if (lastChildVisible) load()
+      return lastChildVisible
+    }
+
+    function newTerm(term, callback) {
+      state = { id:state.id+1, term:term, page:0, loading:false, exhausted:false, callback:callback }
+      load()
+    }
+    return { load:newTerm, check:maybeLoadMore }
+  }
+
+  function throttled(ms, callback) {
+    if (ms <= 0) return callback
+    var timeout = undefined
+    return function() {
+      if (timeout) clearTimeout(timeout)
+      timeout = setTimeout(callback, ms)
+    }
+  }
+
+  function defaultRenderItem(item) {
+    if (item == undefined || item == null) {
+      return ''
+    } else if ($.type(item) === 'string') {
+      return item
+    } else if (item.label) {
+      return item.label
+    } else if (item.toString) {
+      return item.toString()
+    } else {
+      return item
+    }
+  }
+
+  function defaultNoResults(term) {
+    return $('<li>').addClass('no-results').text("No results for '"+term+"'")
+  }
+
 })(jQuery)

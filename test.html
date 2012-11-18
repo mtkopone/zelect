@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Mocha Tests</title>
+  <link rel="stylesheet" href="node_modules/mocha/mocha.css" />
+  <style>
+    #sut { border-bottom: 1px dashed #ddd; padding-bottom: 20px; }
+  </style>
+  <script src="node_modules/jquery-browser/lib/jquery.js"></script>
+  <script src="node_modules/underscore/underscore.js"></script>
+  <script src="node_modules/chai/chai.js"></script>
+  <script src="node_modules/mocha/mocha.js"></script>
+  <script src="zelect.js"></script>
+  <script>mocha.setup('bdd')</script>
+  <script src="test.js"></script>
+</head>
+<body>
+  <div id="sut"></div>
+  <div id="mocha"></div>
+  <script>
+    var assert = chai.assert
+    chai.assert.eq = chai.assert.equal
+    mocha.run()
+
+    function setup(templateId) {
+      var select = $('#templates').find('.'+templateId).clone()
+      select.attr('id', 'select')
+      $('#sut').html(select)
+    }
+
+  </script>
+  <div id="templates" style="display:none">
+    <select class="empty"></select>
+    <select class="with-two-options">
+      <option>First</option>
+      <option>Last</option>
+    </select>
+    <select class="with-two-options-with-values">
+      <option value="first">First</option>
+      <option value="second">Second</option>
+    </select>
+  </div>
+</body>
+</html>
