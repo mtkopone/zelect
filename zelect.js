@@ -5,7 +5,7 @@
     placeholder: String/DOM/jQuery: placeholder (text) before anything is selected. Automatically selects first item if not provided.
     throttle: ms : to throttle filtering of results when search term updated
     noResults: fn : function to create no results text
-    initial: item : arbitraty item to set the initial selection to
+    initial: item : arbitrary item to set the initial selection to
     regexpMatcher: fn: override regexp creation when filtering options
 */
 (function($) {
