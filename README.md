@@ -73,7 +73,7 @@ If the zelect is &lt;select&gt;-backed, `$('select').val()` will return the _val
 ## Initial Selection
 
 1. `opts.initial` if defined
-2. `&lt;option selected="selected"&gt;` if `opts.loader` not defined
+2. `<option selected="selected">` if `opts.loader` not defined
 3. Render placeholder text from `opts.placeholder` if defined
 4. Select the first option from the list
 
@@ -139,4 +139,4 @@ function noResultser(term) {
 }
 ```
 
-<div style="margin-top:40px;">Enjoy,</div>
+Enjoy
