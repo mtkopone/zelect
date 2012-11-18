@@ -7,8 +7,8 @@
 <table>
   <tr><th>option</th><th>default</th><th>type</th><th>usage</th></tr>
   <tr><td>throttle</td><td>300</td><td>ms.</td><td>Delay for throttling keyups for filtering/loading option items based on a search term</td></tr>
-  <tr><td>loader</td><td><code>undefined</code></td><td>function(term, page, callback)</td><td>Custom option item loader. See <a href="#ajax-example">example</a></td></tr>
-  <tr><td>renderItem</td><td><code>item.label || item.toString()</code></td><td>function(item, term)</td><td>Custom rendering for a single option item. . See <a href="#render-item-example">example</a></td></tr>
+  <tr><td>loader</td><td><code>undefined</code></td><td>function(term, page, callback)</td><td>Custom option item loader. See <a href="#ajax-loader-example">example</a></td></tr>
+  <tr><td>renderItem</td><td><code>item.label || item.toString()</code></td><td>function(item, term)</td><td>Custom rendering for a single option item. . See <a href="#custom-option-item-rendering-example">example</a></td></tr>
   <tr><td>initial</td><td><code>undefined</code></td><td><i>item</i></td><td>Custom initial selected item</td></tr>
   <tr><td>placeholder</td><td><code>undefined</code></td><td>String, DOM, jQuery, etc</td><td>Placeholder text or HTML to show when no initial selection. The first option item is selected by default if this is left undefined.</td></tr>
   <tr><td>noResults</td><td>Renders: "No results for '$query'"</td><td>function(term)</td><td>Custom function to render a no-hits text.</td></tr>
@@ -60,7 +60,7 @@ These events are triggered on the &lt;select&gt;-element:
 <table>
   <tr><th>event</th><th>args</th><th>triggered when</th></tr>
   <tr><td><code>ready</code></td><td>-</td><td>zelect is ready: first results have loaded and the initial selection has been made</td></tr>
-  <tr><td><code>change</code></td><td>event, item</td><td>Selected item changed. 2nd parameter if the item itself.</td></tr>
+  <tr><td><code>change</code></td><td>event, item</td><td>Selected item changed. 2nd parameter is the item itself.</td></tr>
 </table>
 
 #### In addition:
@@ -73,17 +73,17 @@ If the zelect is &lt;select&gt;-backed, `$('select').val()` will return the _val
 ## Initial Selection
 
 1. `opts.initial` if defined
-2. &lt;option selected="selected"&gt;` if `opts.loader` not defined
-3. Render placeholder text from `opts.placeholder` is defined
+2. `&lt;option selected="selected"&gt;` if `opts.loader` not defined
+3. Render placeholder text from `opts.placeholder` if defined
 4. Select the first option from the list
 
 
-## <a id="#render-item-example">Custom Option Item Rendering Example</a>
+## Custom Option Item Rendering Example
 
 ```javascript
 $('select'.zelect({
   renderItem: function(item, term) {
-    return $('<span>).addClass('my-item').text(item.text).highlight(term)
+    return $('<span>').addClass('my-item').text(item.text).highlight(term)
   }
 })
 ```
@@ -91,7 +91,7 @@ $('select'.zelect({
 Highlights matches of the search term in the option text, by using e.g. jquery.highlight.js.
 
 
-## <a id="#ajax-example">Ajax Loader Example</a>
+## Ajax Loader Example
 
 ```javascript
 $('select'.zelect({
@@ -139,7 +139,4 @@ function noResultser(term) {
 }
 ```
 
-
-
-
-Enjoy,
+<div style="margin-top:40px;">Enjoy,</div>
