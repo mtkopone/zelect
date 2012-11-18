@@ -15,7 +15,7 @@
     opts = $.extend({}, defaults, opts)
 
     return this.each(function() {
-      var $select = $(this).hide()
+      var $select = $(this).hide().data('zelectItem', selectItem)
 
       var $zelect = $('<div>').addClass('zelect')
       var $selected = $('<div>').addClass('zelected')
@@ -36,7 +36,7 @@
         (e.which === keys.esc) ? hide() : filter()
       })
 
-      $list.on('click', 'li', function() { selectItem($(this) )})
+      $list.on('click', 'li', function() { selectItem($(this).data('zelect-item')) })
 
       $selected.click(toggle)
 
@@ -49,8 +49,7 @@
         $select.trigger('ready')
       })
 
-      function selectItem($item) {
-        var item = $item.data('zelect-item')
+      function selectItem(item) {
         $selected.html(opts.renderItem(item)).removeClass('placeholder')
         hide()
         if (item && item.value) $select.val(item.value)
@@ -88,13 +87,13 @@
       function initialSelection() {
         var $s = $select.find('option[selected="selected"]')
         if (opts.initial) {
-          selectItem($('<li>').data('zelect-item', opts.initial))
+          selectItem(opts.initial)
         } else if (!opts.loader && $s.size() > 0) {
-          selectItem($list.children().eq($s.index()))
+          selectItem($list.children().eq($s.index()).data('zelect-item'))
         } else if (opts.placeholder) {
           $selected.html(opts.placeholder).addClass('placeholder')
         } else {
-          selectItem($list.find(':first'))
+          selectItem($list.find(':first').data('zelect-item'))
         }
       }
     })
@@ -159,6 +158,13 @@
       load()
     }
     return { load:newTerm, check:maybeLoadMore }
+  }
+
+  $.fn.zelectItem = function(item) {
+    return this.each(function() {
+      var zelectItemFn = $(this).data('zelectItem')
+      zelectItemFn && zelectItemFn(item)
+    })
   }
 
   function throttled(ms, callback) {

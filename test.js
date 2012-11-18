@@ -154,6 +154,7 @@ describe('zelect', function() {
       $('.dropdown li:first').click()
       noClass('.zelected', 'placeholder')
     })
+
     it('noResults', function() {
       setup('with-two-options')
       $('#select').zelect({ throttle:0, noResults:function(term) { return 'POW['+term+']POW' } })
@@ -161,12 +162,14 @@ describe('zelect', function() {
       $('.zearch').val('xxx').keyup()
       txt('.dropdown ol', 'POW[xxx]POW')
     })
+
     it('renderItem', function() {
       setup('with-two-options')
       $('#select').zelect({ throttle:0, renderItem:function(item) { return $('<pre>').text(item.label) } })
       html('.dropdown li:first', '<pre>First</pre>')
       html('.zelected', '<pre>First</pre>')
     })
+
     it('can initially be set to an arbitrary item', function() {
       var initial = { label:'something completely different', value:'pow'}
       var changeChecked = false
@@ -182,6 +185,23 @@ describe('zelect', function() {
       val('#select', 'First')
       assert.isTrue(changeChecked)
     })
+
+    it('can be set to an arbitrary item at any time', function() {
+      var item = { label:'Someone Else', data:'secret' }
+      var changeChecked = false
+      setup('with-two-options')
+      $('#select').on('change', function(e, i) {
+        eq(i, item)
+        selectionIs('Someone Else', item)
+        changeChecked = true
+      })
+      $('#select').zelect({ placeholder: 'Nothing selected yet'})
+      $('#select').zelectItem(item)
+      selectionIs('Someone Else', item)
+      // <select> val can't be changed to an option that doesnt exist:
+      val('#select', 'First')
+      assert.isTrue(changeChecked)
+    })
   })
 
   describe('This and that', function() {
@@ -193,6 +213,7 @@ describe('zelect', function() {
       })
       $('#select').zelect({ loader:function(term, page, callback) { callback(['1','2']) } })
     })
+
     it('sets initial selection to selected option', function() {
       setup('with-two-options-with-values')
       $('#select option:last').attr('selected', 'selected')
@@ -200,9 +221,11 @@ describe('zelect', function() {
       txt('.zelected', 'Second')
       val('#select', 'second')
     })
+
     it('throttles search input', function(done) {
       setup('with-two-options-with-values')
       $('#select').zelect({
+        placeholder: 'Nothing selected yet...',
         throttle:1,
         loader: function(term, page, callback) {
           if (term == '') return callback([])
