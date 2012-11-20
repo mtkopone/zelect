@@ -345,6 +345,38 @@ describe('zelect', function() {
     }
   })
 
+  describe('Blur', function() {
+    beforeEach(function() {
+      setup('with-two-options')
+      $('#select').zelect()
+    })
+
+    it('adds hover class when mouse over zelect', function() {
+      $('.zelect').mouseenter()
+      hasClass('.zelect', 'hover')
+      $('.zelected').click()
+      hasClass('.zelect', 'hover')
+      $('.dropdown li:first').mouseenter()
+      hasClass('.zelect', 'hover')
+      $('.zelect').mouseleave()
+      noClass('.zelect', 'hover')
+    })
+    it('closes dropdown on blur when no hover class', function() {
+      $('.zelected').click()
+      $('.zearch').blur()
+      defaultInitialState()
+    })
+    it("doesn't close dropdown on blur when hover class exists", function() {
+      $('.zelected').click()
+      $('.zelect').mouseenter()
+      $('.zearch').blur()
+      defaultOpenState()
+      $('.zelect').mouseleave()
+      $('.zearch').blur()
+      defaultInitialState()
+    })
+  })
+
   function ok(bool, msg) {
     assert.isTrue(bool, msg)
   }
