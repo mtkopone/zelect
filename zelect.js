@@ -12,7 +12,7 @@
     regexpMatcher:  function(term): override regexp creation when filtering options
 */
 (function($) {
-  var keys = { esc: 27 }
+  var keys = { enter:13, esc:27, left:37, up:38, right:39, down:40 }
   var defaults = {
     throttle: 300,
     renderItem: defaultRenderItem,
@@ -31,6 +31,7 @@
       var $dropdown = $('<div>').addClass('dropdown').hide()
       var $search = $('<input>').addClass('zearch')
       var $list = $('<ol>')
+      var listNavigator = navigable($list)
 
       var itemHandler = opts.loader
         ? infiniteScroll($list, opts.loader, appendItem)
@@ -42,7 +43,13 @@
       })
 
       $search.keyup(function(e) {
-        (e.which === keys.esc) ? hide() : filter()
+        switch (e.which) {
+          case keys.esc: hide(); return;
+          case keys.up: listNavigator.prev(); return;
+          case keys.down: listNavigator.next(); return;
+          case keys.enter: selectItem(listNavigator.current().data('zelect-item')); return;
+          default: filter()
+        }
       })
 
       $list.on('click', 'li', function() { selectItem($(this).data('zelect-item')) })
@@ -71,6 +78,7 @@
         if ($dropdown.is(':visible')) {
           $search.focus().select()
           itemHandler.check()
+          listNavigator.ensure()
         }
       }
 
@@ -210,4 +218,60 @@
     return new RegExp('(^|\\s)'+term, 'i')
   }
 
+  function navigable($list) {
+    var skipMouseEvent = false
+    $list.on('mouseenter', 'li', onMouseEnter)
+
+    function next() {
+      var $next = current().next('li')
+      if (set($next)) ensureBottomVisible($next)
+    }
+    function prev() {
+      var $prev = current().prev('li')
+      if (set($prev)) ensureTopVisible($prev)
+    }
+    function current() {
+      return $list.find('.current')
+    }
+    function ensure() {
+      if (current().size() === 0) {
+        $list.find('li:first').addClass('current')
+      }
+    }
+    function set($item) {
+      if ($item.size() === 0) return false
+      current().removeClass('current')
+      $item.addClass('current')
+      return true
+    }
+    function onMouseEnter() {
+      if (skipMouseEvent) {
+        skipMouseEvent = false
+        return
+      }
+      set($(this))
+    }
+    function itemTop($item) {
+      return $item.offset().top - $list.offset().top
+    }
+    function ensureTopVisible($item) {
+      var scrollTop = $list.scrollTop()
+      var offset = itemTop($item) + scrollTop
+      if (scrollTop > offset) {
+        moveScroll(offset)
+      }
+    }
+    function ensureBottomVisible($item) {
+      var scrollBottom = $list.height()
+      var itemBottom = itemTop($item) + $item.outerHeight()
+      if (scrollBottom < itemBottom) {
+        moveScroll($list.scrollTop() + itemBottom - scrollBottom)
+      }
+    }
+    function moveScroll(offset) {
+      $list.scrollTop(offset)
+      skipMouseEvent = true
+    }
+    return { next:next, prev:prev, current:current, ensure:ensure }
+  }
 })(jQuery)

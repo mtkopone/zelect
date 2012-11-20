@@ -1,4 +1,5 @@
 describe('zelect', function() {
+  var keys = { enter:13, esc:27, left:37, up:38, right:39, down:40 }
 
   describe('The basics', function() {
     beforeEach(function() {
@@ -47,7 +48,7 @@ describe('zelect', function() {
 
     it('closes dropdown on esc', function() {
       $('.zelected').click()
-      $('.zearch').trigger($.Event('keyup', { which: 27 }))
+      keyup(keys.esc)
       hidden('.dropdown')
     })
   })
@@ -266,6 +267,72 @@ describe('zelect', function() {
       defaultInitialState()
     })
   })
+
+  describe('List navigation', function() {
+    beforeEach(function() {
+      setup('empty')
+      $('#select').zelect({ placeholder:'Nothing selected', loader:function(term, page, callback) {
+        if (page >= 2) return callback([])
+        callback(_.range(page*10, page*10+10))
+      }})
+      $('.zelect .dropdown ol').css({ height: '100px', 'overflow-y':'auto' })
+      $('.zelected').click()
+    })
+
+    it('sets first item as current', function() {
+      hasClass('.dropdown li:first', 'current')
+    })
+
+    it('selects on enter', function() {
+      txt('.zelected', 'Nothing selected')
+      keyup(keys.down)
+      keyup(keys.enter)
+      txt('.zelected', '1')
+    })
+
+    it('moves selection on mouse enter', function() {
+      $('.dropdown li:eq(3)').mouseenter(); eq($('.dropdown li.current').index(), 3)
+      $('.dropdown li:eq(1)').mouseenter(); eq($('.dropdown li.current').index(), 1)
+    })
+
+    it('moves up and down', function() {
+      keyup(keys.down); eq($('.dropdown li.current').index(), 1)
+      keyup(keys.down); eq($('.dropdown li.current').index(), 2)
+      keyup(keys.up);   eq($('.dropdown li.current').index(), 1)
+      keyup(keys.up);   eq($('.dropdown li.current').index(), 0)
+    })
+
+    it("doesn't go up past first", function() {
+      keyup(keys.up); keyup(keys.up); keyup(keys.up)
+      eq($('.dropdown li.current').index(), 0)
+    })
+
+    it("doesn't go down past last", function() {
+      go(keys.down)
+      eq($('.dropdown li.current').index(), 19)
+    })
+
+    it('scrolls list up and down as necessary', function() {
+      go(keys.down); ok($('.dropdown ol').scrollTop() > 400)
+      go(keys.up);   eq($('.dropdown ol').scrollTop(), 0)
+    })
+
+    it('skips first mouseenter after scroll', function() {
+      go(keys.down);
+      $('.dropdown li:eq(17)').mouseenter()
+      eq($('.dropdown li.current').index(), 19)
+      $('.dropdown li:eq(17)').mouseenter()
+      eq($('.dropdown li.current').index(), 17)
+    })
+
+    function go(key) {
+      _.range(0, 25).forEach(function() { keyup(key); $('.dropdown ol').scroll() })
+    }
+  })
+
+  function ok(bool, msg) {
+    assert.isTrue(bool, msg)
+  }
   function eq(a,b, msg) {
     assert.deepEqual(a,b, msg)
   }
@@ -282,13 +349,13 @@ describe('zelect', function() {
     eq($(locator).size(), n, locator+'.length !== '+n)
   }
   function visible(locator) {
-    assert.isTrue($(locator).is(':visible'), locator+' is hidden.')
+    ok($(locator).is(':visible'), locator+' is hidden.')
   }
   function hidden(locator) {
-    assert.isTrue($(locator).is(':hidden'), locator+' is visible')
+    ok($(locator).is(':hidden'), locator+' is visible')
   }
   function hasClass(locator, clazz) {
-    assert.isTrue($(locator).hasClass(clazz), locator+' doesnt have class '+clazz)
+    ok($(locator).hasClass(clazz), locator+' doesnt have class '+clazz)
   }
   function noClass(locator, clazz) {
     assert.isFalse($(locator).hasClass(clazz), locator+' has class '+clazz)
@@ -314,5 +381,7 @@ describe('zelect', function() {
     val('.zearch', '')
     items(['First','Last'])
   }
-
+  function keyup(code) {
+    $('.zearch').trigger($.Event('keyup', { which: code }))
+  }
 })
