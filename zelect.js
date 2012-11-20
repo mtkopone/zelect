@@ -1,6 +1,6 @@
 /*
   opts:
-    throttle:       ms: delay to throttle filtering of results when search term updated
+    throttle:       ms: delay to throttle filtering of results when search term updated, 0 means synchronous
     loader:         function(term, page, callback): load more items
                       callback expects an array of items
     renderItem:     function(item, term): render the content of a single item

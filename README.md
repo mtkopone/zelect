@@ -16,7 +16,7 @@ It's just yet another &lt;select&gt;.
 
 <table>
   <tr><th>option</th><th>default</th><th>type</th><th>usage</th></tr>
-  <tr><td>throttle</td><td>300</td><td>ms.</td><td>Delay for throttling keyups for filtering/loading option items based on a search term</td></tr>
+  <tr><td>throttle</td><td>300</td><td>ms.</td><td>Delay for throttling keyups for filtering/loading option items based on a search term. 0 makes things synchronous.</td></tr>
   <tr><td>loader</td><td><code>undefined</code></td><td>function(term, page, callback)</td><td>Custom option item loader. See <a href="#ajax-loader-example">example</a></td></tr>
   <tr><td>renderItem</td><td><code>item.label || item.toString()</code></td><td>function(item, term)</td><td>Custom rendering for a single option item. See <a href="#custom-option-item-rendering-example">example</a></td></tr>
   <tr><td>initial</td><td><code>undefined</code></td><td><i>item</i></td><td>Custom initial selected item</td></tr>
