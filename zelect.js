@@ -153,10 +153,16 @@
 
     function maybeLoadMore() {
       if (state.exhausted) return false
-      var lastChildTop = $list.children(':last').offset().top - $list.offset().top
-      var lastChildVisible = lastChildTop < $list.outerHeight()
-      if (lastChildVisible) load()
-      return lastChildVisible
+      var $lastChild = $list.children(':last')
+      if ($lastChild.size() === 0) {
+        load()
+        return true
+      } else {
+        var lastChildTop = $lastChild.offset().top - $list.offset().top
+        var lastChildVisible = lastChildTop < $list.outerHeight()
+        if (lastChildVisible) load()
+        return lastChildVisible
+      }
     }
 
     function newTerm(term, callback) {
