@@ -120,6 +120,7 @@
         } else {
           selectItem($list.find(':first').data('zelect-item'))
         }
+        checkResults()
       }
     })
   }

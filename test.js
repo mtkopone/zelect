@@ -13,9 +13,7 @@ describe('zelect', function() {
 
     it('shows dropdown on click', function() {
       $('.zelected').click()
-      visible('.dropdown')
-      visible('.zearch')
-      visible('.dropdown ol li')
+      defaultOpenState()
     })
 
     it('filters options', function() {
@@ -360,7 +358,7 @@ describe('zelect', function() {
     eq($(locator).size(), n, locator+'.length !== '+n)
   }
   function visible(locator) {
-    ok($(locator).is(':visible'), locator+' is hidden.')
+    ok($(locator).is(':visible'), locator+' is hidden')
   }
   function hidden(locator) {
     ok($(locator).is(':hidden'), locator+' is visible')
@@ -390,7 +388,17 @@ describe('zelect', function() {
     hidden('.dropdown .no-results')
     txt('.zelected', 'First')
     val('.zearch', '')
+    items(['First','Last'])
+  }
+  function defaultOpenState() {
+    visible('.zelect')
+    visible('.zelected')
+    visible('.dropdown')
+    visible('.zearch')
+    visible('.dropdown ol li')
+    hasClass('.zelect', 'open')
     val('.zearch', '')
+    hidden('.dropdown .no-results')
     items(['First','Last'])
   }
   function keyup(code) {
