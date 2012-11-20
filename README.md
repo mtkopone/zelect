@@ -21,7 +21,7 @@ It's just yet another &lt;select&gt;.
   <tr><td>renderItem</td><td><code>item.label || item.toString()</code></td><td>function(item, term)</td><td>Custom rendering for a single option item. See <a href="#custom-option-item-rendering-example">example</a></td></tr>
   <tr><td>initial</td><td><code>undefined</code></td><td><i>item</i></td><td>Custom initial selected item</td></tr>
   <tr><td>placeholder</td><td><code>undefined</code></td><td>String, DOM, jQuery, etc</td><td>Placeholder text or HTML to show when no initial selection. The first option item is selected by default if this is left undefined.</td></tr>
-  <tr><td>noResults</td><td>Renders: "No results for '$query'"</td><td>function(term)</td><td>Custom function to render a no-hits text.</td></tr>
+  <tr><td>noResults</td><td>"No results for '$query'"</td><td>String, DOM, jQuery, etc</td><td>Custom function to render a no-hits text.</td></tr>
   <tr><td>regexpMatcher</td><td><code>/(^|\s)term/i</code></td><td>function(term)</td><td>Custom function to create a RegExp to filter &lt;select&gt;-based options with.</td></tr>
 </table>
 

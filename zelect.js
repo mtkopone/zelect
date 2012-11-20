@@ -29,6 +29,7 @@
       var $zelect = $('<div>').addClass('zelect')
       var $selected = $('<div>').addClass('zelected')
       var $dropdown = $('<div>').addClass('dropdown').hide()
+      var $noResults = $('<div>').addClass('no-results')
       var $search = $('<input>').addClass('zearch')
       var $list = $('<ol>')
       var listNavigator = navigable($list)
@@ -39,16 +40,22 @@
 
       var filter = throttled(opts.throttle, function() {
         var term = $.trim($search.val())
-        itemHandler.load(term, function() { checkForNoResults(term) })
+        itemHandler.load(term, function() { checkResults(term) })
       })
 
       $search.keyup(function(e) {
         switch (e.which) {
           case keys.esc: hide(); return;
-          case keys.up: listNavigator.prev(); return;
-          case keys.down: listNavigator.next(); return;
+          case keys.up: return;
+          case keys.down: return;
           case keys.enter: selectItem(listNavigator.current().data('zelect-item')); return;
           default: filter()
+        }
+      })
+      $search.keydown(function(e) {
+        switch (e.which) {
+          case keys.up: e.preventDefault(); listNavigator.prev(); return;
+          case keys.down: e.preventDefault(); listNavigator.next(); return;
         }
       })
 
@@ -58,7 +65,7 @@
 
       $zelect.insertAfter($select)
         .append($selected)
-        .append($dropdown.append($('<div>').addClass('zearch-container').append($search)).append($list))
+        .append($dropdown.append($('<div>').addClass('zearch-container').append($search).append($noResults)).append($list))
 
       itemHandler.load($search.val(), function() {
         initialSelection()
@@ -92,9 +99,12 @@
         $list.append($item)
       }
 
-      function checkForNoResults(term) {
+      function checkResults(term) {
         if ($list.children().size() === 0) {
-          $list.append(opts.noResults(term))
+          $noResults.html(opts.noResults(term)).show()
+        } else {
+          $noResults.hide()
+          listNavigator.ensure()
         }
       }
 
@@ -211,7 +221,7 @@
   }
 
   function defaultNoResults(term) {
-    return $('<li>').addClass('no-results').text("No results for '"+term+"'")
+    return "No results for '"+term+"'"
   }
 
   function defaultRegexpMatcher(term) {

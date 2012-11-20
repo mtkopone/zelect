@@ -27,9 +27,11 @@ describe('zelect', function() {
     })
 
     it('shows no results text', function() {
+      $('.zelected').click()
       $('.zearch').val('x').keyup()
-      items(["No results for 'x'"])
-      hasClass('.dropdown li', 'no-results')
+      items([])
+      visible('.dropdown .no-results')
+      txt('.dropdown .no-results', "No results for 'x'")
     })
 
     it('selects on click', function(done) {
@@ -153,7 +155,8 @@ describe('zelect', function() {
       $('#select').zelect({ throttle:0, noResults:function(term) { return 'POW['+term+']POW' } })
       $('.zelected').click()
       $('.zearch').val('xxx').keyup()
-      txt('.dropdown ol', 'POW[xxx]POW')
+      visible('.dropdown .no-results')
+      txt('.dropdown .no-results', 'POW[xxx]POW')
     })
 
     it('renderItem', function() {
@@ -285,7 +288,7 @@ describe('zelect', function() {
 
     it('selects on enter', function() {
       txt('.zelected', 'Nothing selected')
-      keyup(keys.down)
+      keydown(keys.down)
       keyup(keys.enter)
       txt('.zelected', '1')
     })
@@ -296,14 +299,14 @@ describe('zelect', function() {
     })
 
     it('moves up and down', function() {
-      keyup(keys.down); eq($('.dropdown li.current').index(), 1)
-      keyup(keys.down); eq($('.dropdown li.current').index(), 2)
-      keyup(keys.up);   eq($('.dropdown li.current').index(), 1)
-      keyup(keys.up);   eq($('.dropdown li.current').index(), 0)
+      keydown(keys.down); eq($('.dropdown li.current').index(), 1)
+      keydown(keys.down); eq($('.dropdown li.current').index(), 2)
+      keydown(keys.up);   eq($('.dropdown li.current').index(), 1)
+      keydown(keys.up);   eq($('.dropdown li.current').index(), 0)
     })
 
     it("doesn't go up past first", function() {
-      keyup(keys.up); keyup(keys.up); keyup(keys.up)
+      keydown(keys.up); keydown(keys.up); keydown(keys.up)
       eq($('.dropdown li.current').index(), 0)
     })
 
@@ -325,8 +328,11 @@ describe('zelect', function() {
       eq($('.dropdown li.current').index(), 17)
     })
 
+    it('functions after filtering', function() {
+
+    })
     function go(key) {
-      _.range(0, 25).forEach(function() { keyup(key); $('.dropdown ol').scroll() })
+      _.range(0, 25).forEach(function() { keydown(key); $('.dropdown ol').scroll() })
     }
   })
 
@@ -376,6 +382,7 @@ describe('zelect', function() {
     visible('.zelected')
     hidden('.dropdown')
     hidden('.zearch')
+    hidden('.dropdown .no-results')
     txt('.zelected', 'First')
     val('.zearch', '')
     val('.zearch', '')
@@ -383,5 +390,8 @@ describe('zelect', function() {
   }
   function keyup(code) {
     $('.zearch').trigger($.Event('keyup', { which: code }))
+  }
+  function keydown(code) {
+    $('.zearch').trigger($.Event('keydown', { which: code }))
   }
 })
