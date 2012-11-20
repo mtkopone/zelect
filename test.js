@@ -277,7 +277,7 @@ describe('zelect', function() {
   describe('List navigation', function() {
     beforeEach(function() {
       setup('empty')
-      $('#select').zelect({ placeholder:'Nothing selected', loader:function(term, page, callback) {
+      $('#select').zelect({ placeholder:'Nothing selected', throttle:0, loader:function(term, page, callback) {
         if (page >= 2) return callback([])
         callback(_.range(page*10, page*10+10))
       }})
@@ -332,7 +332,13 @@ describe('zelect', function() {
     })
 
     it('functions after filtering', function() {
-
+      keydown(keys.down);
+      keydown(keys.down);
+      eq($('.dropdown li.current').index(), 2)
+      $('.zearch').val('xxx').keyup()
+      eq($('.dropdown li.current').index(), 0)
+      keydown(keys.down);
+      eq($('.dropdown li.current').index(), 1)
     })
     function go(key) {
       _.range(0, 25).forEach(function() { keydown(key); $('.dropdown ol').scroll() })
