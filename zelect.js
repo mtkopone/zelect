@@ -12,7 +12,7 @@
     regexpMatcher:  function(term): override regexp creation when filtering options
 */
 (function($) {
-  var keys = { enter:13, esc:27, left:37, up:38, right:39, down:40 }
+  var keys = { tab:9, enter:13, esc:27, left:37, up:38, right:39, down:40 }
   var defaults = {
     throttle: 300,
     renderItem: defaultRenderItem,
@@ -54,6 +54,7 @@
       })
       $search.keydown(function(e) {
         switch (e.which) {
+          case keys.tab: e.preventDefault(); hide(); return;
           case keys.up: e.preventDefault(); listNavigator.prev(); return;
           case keys.down: e.preventDefault(); listNavigator.next(); return;
         }

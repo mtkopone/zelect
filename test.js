@@ -1,5 +1,5 @@
 describe('zelect', function() {
-  var keys = { enter:13, esc:27, left:37, up:38, right:39, down:40 }
+  var keys = { tab:9, enter:13, esc:27, left:37, up:38, right:39, down:40 }
 
   describe('The basics', function() {
     beforeEach(function() {
@@ -51,6 +51,11 @@ describe('zelect', function() {
     it('closes dropdown on esc', function() {
       $('.zelected').click()
       keyup(keys.esc)
+      hidden('.dropdown')
+    })
+    it('closes dropdown on tab', function() {
+      $('.zelected').click()
+      keydown(keys.tab)
       hidden('.dropdown')
     })
   })
