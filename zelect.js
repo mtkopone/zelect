@@ -58,7 +58,7 @@
 
       $zelect.insertAfter($select)
         .append($selected)
-        .append($dropdown.append($search).append($list))
+        .append($dropdown.append($('<div>').addClass('zearch-container').append($search)).append($list))
 
       itemHandler.load($search.val(), function() {
         initialSelection()
