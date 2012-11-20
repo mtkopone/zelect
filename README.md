@@ -4,7 +4,7 @@ It's just yet another &lt;select&gt;.
 
 <a href="http://mtkopone.github.com/zelect/">&gt;&gt;&gt; Example &lt;&lt;&lt;</a>
 
-* Small, < 200 LOC
+* Small, < 300 LOC
 * Zero base CSS, roll your own
 * Customizable (well, at least workaroundable)
 * Handles asyncronous paged loading of large option lists (read: AJAX-ready-and-enabled)
