@@ -17,12 +17,12 @@ It's just yet another &lt;select&gt;.
 <table>
   <tr><th>option</th><th>default</th><th>type</th><th>usage</th></tr>
   <tr><td>throttle</td><td>300</td><td>ms.</td><td>Delay for throttling keyups for filtering/loading option items based on a search term. 0 makes things synchronous.</td></tr>
-  <tr><td>loader</td><td><code>undefined</code></td><td>function(term, page, callback)</td><td>Custom option item loader. See <a href="#ajax-loader-example">example</a></td></tr>
-  <tr><td>renderItem</td><td><code>item.label || item.toString()</code></td><td>function(item, term)</td><td>Custom rendering for a single option item. See <a href="#custom-option-item-rendering-example">example</a></td></tr>
+  <tr><td>loader</td><td><code>undefined</code></td><td>function(term, page, callback): Array[Item]</td><td>Custom option item loader. See <a href="#ajax-loader-example">example</a></td></tr>
+  <tr><td>renderItem</td><td><code>item.label || item.toString()</code></td><td>function(item, term): String, DOM, jQuery, etc.</td><td>Custom rendering for a single option item. See <a href="#custom-option-item-rendering-example">example</a></td></tr>
   <tr><td>initial</td><td><code>undefined</code></td><td><i>item</i></td><td>Custom initial selected item</td></tr>
   <tr><td>placeholder</td><td><code>undefined</code></td><td>String, DOM, jQuery, etc</td><td>Placeholder text or HTML to show when no initial selection. The first option item is selected by default if this is left undefined.</td></tr>
-  <tr><td>noResults</td><td>"No results for '$query'"</td><td>String, DOM, jQuery, etc</td><td>Custom function to render a no-hits text.</td></tr>
-  <tr><td>regexpMatcher</td><td><code>/(^|\s)term/i</code></td><td>function(term)</td><td>Custom function to create a RegExp to filter &lt;select&gt;-based options with.</td></tr>
+  <tr><td>noResults</td><td>"No results for '$query'"</td><td>function(name): String, DOM, jQuery, etc.</td><td>Custom function to render a no-hits text.</td></tr>
+  <tr><td>regexpMatcher</td><td><code>/(^|\s)term/i</code></td><td>function(term): RegExp</td><td>Custom function to create a RegExp to filter &lt;select&gt;-based options with.</td></tr>
 </table>
 
 An _item_ is any javascript data structure: String, Object, Array, whatever.
