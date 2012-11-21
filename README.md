@@ -4,6 +4,9 @@ It's just yet another &lt;select&gt;.
 
 <a href="http://mtkopone.github.com/zelect/">&gt;&gt;&gt; Example &lt;&lt;&lt;</a>
 
+<a href="https://raw.github.com/mtkopone/zelect/master/zelect.js">&gt;&gt;&gt; Download &lt;&lt;&lt;</a>
+
+
 * Small, < 300 LOC
 * Zero base CSS, roll your own
 * Customizable (well, at least workaroundable)
