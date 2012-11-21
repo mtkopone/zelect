@@ -1,4 +1,6 @@
 /*
+  zelect-0.0.2
+
   opts:
     throttle:       ms: delay to throttle filtering of results when search term updated, 0 means synchronous
     loader:         function(term, page, callback): load more items
