@@ -1,5 +1,7 @@
 # <span style="font-family: Consolas,'Liberation Mono',Courier,monospace">$('select').zelect()</span>
 
+[![Build Status](https://secure.travis-ci.org/mtkopone/zelect.png?branch=master)](https://travis-ci.org/mtkopone/zelect)
+
 It's just yet another &lt;select&gt;.
 
 <a href="http://mtkopone.github.com/zelect/">&gt;&gt;&gt; Example &lt;&lt;&lt;</a>
