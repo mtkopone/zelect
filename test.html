@@ -21,7 +21,8 @@
   <script>
     var assert = chai.assert
     chai.assert.eq = chai.assert.equal
-    mocha.run()
+
+    window.mochaPhantomJS ? mochaPhantomJS.run() : mocha.run()
 
     function setup(templateId) {
       var select = $('#templates').find('.'+templateId).clone()
