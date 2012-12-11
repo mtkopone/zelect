@@ -12,7 +12,7 @@ It's just yet another &lt;select&gt;.
 * Small, < 300 LOC
 * Zero base CSS, roll your own
 * Customizable (well, at least workaroundable)
-* Handles asyncronous paged loading of large option lists (read: AJAX-ready-and-enabled)
+* Handles asynchronous paged loading of large option lists (read: AJAX-ready-and-enabled)
 * Initializable in a detached or hidden DOM node
 * Programmatically selectable and <a href="#programmatically-changing-the-selection">changable</a>
 * <a href="https://travis-ci.org/mtkopone/zelect">Unit-</a><a href="https://github.com/mtkopone/zelect/blob/master/test.js">tested</a>
