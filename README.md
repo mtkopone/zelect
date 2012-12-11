@@ -14,20 +14,20 @@ It's just yet another &lt;select&gt;.
 * Customizable (well, at least workaroundable)
 * Handles asyncronous paged loading of large option lists (read: AJAX-ready-and-enabled)
 * Initializable in a detached or hidden DOM node
-* Programmatically selectable
-* <a href="https://github.com/mtkopone/zelect/blob/master/test.js">Unit-tested</a>
+* Programmatically selectable and <a href="#programmatically-changing-the-selection">changable</a>
+* <a href="https://travis-ci.org/mtkopone/zelect">Unit-</a><a href="https://github.com/mtkopone/zelect/blob/master/test.js">tested</a>
 
 ## <span style="font-family: Consolas,'Liberation Mono',Courier,monospace">for opts in $.fn.zelect(opts)</span>
 
 <table>
   <tr><th>option</th><th>default</th><th>type</th><th>usage</th></tr>
   <tr><td>throttle</td><td>300</td><td>ms.</td><td>Delay for throttling keyups for filtering/loading option items based on a search term. 0 makes things synchronous.</td></tr>
-  <tr><td>loader</td><td><code>undefined</code></td><td>function(term, page, callback): Array[Item]</td><td>Custom option item loader. See <a href="#ajax-loader-example">example</a></td></tr>
-  <tr><td>renderItem</td><td><code>item.label || item.toString()</code></td><td>function(item, term): String, DOM, jQuery, etc.</td><td>Custom rendering for a single option item. See <a href="#custom-option-item-rendering-example">example</a></td></tr>
-  <tr><td>initial</td><td><code>undefined</code></td><td><i>item</i></td><td>Custom initial selected item</td></tr>
+  <tr><td>loader</td><td><code>undefined</code></td><td>function(term, page, callback): Array[Item]</td><td>Function for loading a pageful of option items. See <a href="#ajax-loader-example">example</a></td></tr>
+  <tr><td>renderItem</td><td><code>item.label || item.toString()</code></td><td>function(item, term): String, DOM, jQuery, etc.</td><td>Function to render a single option item. See <a href="#custom-option-item-rendering-example">example</a></td></tr>
+  <tr><td>initial</td><td><code>undefined</code></td><td><i>item</i></td><td>Initially selected item</td></tr>
   <tr><td>placeholder</td><td><code>undefined</code></td><td>String, DOM, jQuery, etc</td><td>Placeholder text or HTML to show when no initial selection. The first option item is selected by default if this is left undefined.</td></tr>
-  <tr><td>noResults</td><td>"No results for '$query'"</td><td>function(name): String, DOM, jQuery, etc.</td><td>Custom function to render a no-hits text.</td></tr>
-  <tr><td>regexpMatcher</td><td><code>/(^|\s)term/i</code></td><td>function(term): RegExp</td><td>Custom function to create a RegExp to filter &lt;select&gt;-based options with.</td></tr>
+  <tr><td>noResults</td><td>"No results for '$query'"</td><td>function(query): String, DOM, jQuery, etc.</td><td>Function to render a no-hits text.</td></tr>
+  <tr><td>regexpMatcher</td><td><code>/(^|\s)term/i</code></td><td>function(term): RegExp</td><td>Function to create a RegExp to filter &lt;select&gt;-based options with.</td></tr>
 </table>
 
 An _item_ is any javascript data structure: String, Object, Array, whatever.
@@ -57,7 +57,7 @@ If the option list is server-backed, infinite or close to it, use `opts.loader`:
 <select id="async-backed-zelect"></select>
 ```
 ```javascript
-$('#select-backed-zelect').zelect({
+$('#async-backed-zelect').zelect({
   initial: 'Third',
   loader: function(term, page, callback) {
     callback(['First for page '+page, 'Second', 'Third'])
@@ -86,6 +86,11 @@ If the zelect is &lt;select&gt;-backed, `$('select').val()` will return the _val
 `$('select').data('zelect-item')` will always return the currently selected _item_.
 
 
+## Programmatically Changing The Selection
+
+`$('select').zelectItem(myNewItemThatIWantToSelectNow)` will do that. And fire an appropriate change event.
+
+
 ## Styling
 
 zelect comes with **no** base css. Make your own.
@@ -95,6 +100,7 @@ For inspiration, see <a href="http://mtkopone.github.com/zelect/">an example</a>
 
 ## Initial Selection
 
+When first rendered, zelect determines the initially selected item in this order:
 1. `opts.initial` if defined
 2. `<option selected="selected">` if `opts.loader` not defined
 3. Render placeholder text from `opts.placeholder` if defined
