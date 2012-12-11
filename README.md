@@ -14,7 +14,7 @@ It's just yet another &lt;select&gt;.
 * Customizable (well, at least workaroundable)
 * Handles asynchronous paged loading of large option lists (read: AJAX-ready-and-enabled)
 * Initializable in a detached or hidden DOM node
-* Programmatically selectable and <a href="#programmatically-changing-the-selection">changable</a>
+* Programmatically selectable and <a href="#programmatically-changing-the-selection">changeable</a>
 * <a href="https://travis-ci.org/mtkopone/zelect">Unit-</a><a href="https://github.com/mtkopone/zelect/blob/master/test.js">tested</a>
 
 ## <span style="font-family: Consolas,'Liberation Mono',Courier,monospace">for opts in $.fn.zelect(opts)</span>
