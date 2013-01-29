@@ -79,7 +79,8 @@
       })
 
       function selectItem(item) {
-        $selected.html(opts.renderItem(item)).removeClass('placeholder')
+        var rendered = opts.renderItem(item)
+        $selected[htmlOrText(rendered)](rendered).removeClass('placeholder')
         hide()
         if (item && item.value) $select.val(item.value)
         $select.data('zelected', item).trigger('change', item)
@@ -100,8 +101,11 @@
         $zelect.removeClass('open')
       }
 
+      function htmlOrText(x) { return (x instanceof jQuery || x.nodeType != null) ? 'html' : 'text' }
+
       function appendItem(item, term) {
-        var $item = $('<li>').data('zelect-item', item).append(opts.renderItem(item, term))
+        var rendered = opts.renderItem(item, term)
+        var $item = $('<li>').data('zelect-item', item)[htmlOrText(rendered)](rendered)
         $list.append($item)
       }
 

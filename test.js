@@ -173,12 +173,12 @@ describe('zelect', function() {
       setup('with-several-options')
       $('#select').zelect({ throttle:0, renderItem:function(item, term) {
         var re = new RegExp('\\b('+term+')', 'i')
-        return item.label.replace(re, '<em>$1</em>')
+        return $('<span>').html(item.label.replace(re, '<em>$1</em>'))
       }})
       $('.zelected').click()
       $('.zearch').val('is').keyup()
       items(['This is first', 'Here is second', "Isn't fifth"])
-      html('.dropdown li:first', 'This <em>is</em> first')
+      html('.dropdown li:first', '<span>This <em>is</em> first</span>')
     })
 
     it('regexpMatcher', function() {
@@ -374,6 +374,22 @@ describe('zelect', function() {
       $('.zelect').mouseleave()
       $('.zearch').blur()
       defaultInitialState()
+    })
+  })
+
+  describe('XSS payload', function() {
+    beforeEach(function() {
+      setup('xss-payload')
+      $('#select').zelect()
+    })
+    it("doesn't execute (throw an error) when opening dropdown", function() {
+      $('.zelected').click()
+    })
+    it("doesn't execute when searching", function() {
+      $('.zelected').click()
+      $('.zearch')
+        .val('value').keyup()
+        .val('option').keyup()
     })
   })
 
