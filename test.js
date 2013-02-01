@@ -223,6 +223,15 @@ describe('zelect', function() {
       val('#select', 'First')
       assert.isTrue(changeChecked)
     })
+
+    it('can refresh an arbitrary item', function() {
+      setup('with-two-options')
+      function valueAsId(x) { return x.value }
+      var newItem = { value:'First', label:'Updated First' }
+      $('#select').zelect().refreshZelectItem(newItem, valueAsId)
+      selectionIs('Updated First', newItem)
+      items(['Updated First', 'Last'])
+    })
   })
 
   describe('This and that', function() {

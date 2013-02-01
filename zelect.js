@@ -26,8 +26,7 @@
     opts = $.extend({}, defaults, opts)
 
     return this.each(function() {
-      var $select = $(this).hide().data('zelectItem', selectItem)
-
+      var $select = $(this).hide().data('zelectItem', selectItem).data('refreshItem', refreshItem)
       var $zelect = $('<div>').addClass('zelect')
       var $selected = $('<div>').addClass('zelected')
       var $dropdown = $('<div>').addClass('dropdown').hide()
@@ -41,7 +40,7 @@
         : selectBased($select, $list, opts.regexpMatcher, appendItem)
 
       var filter = throttled(opts.throttle, function() {
-        var term = $.trim($search.val())
+        var term = searchTerm()
         itemHandler.load(term, function() { checkResults(term) })
       })
 
@@ -79,11 +78,24 @@
       })
 
       function selectItem(item) {
-        var rendered = opts.renderItem(item)
-        $selected[htmlOrText(rendered)](rendered).removeClass('placeholder')
+        renderContent($selected, opts.renderItem(item)).removeClass('placeholder')
         hide()
         if (item && item.value) $select.val(item.value)
         $select.data('zelected', item).trigger('change', item)
+      }
+
+      function refreshItem(item, identityCheckFn) {
+        var eq = function(a, b) { return identityCheckFn(a) === identityCheckFn(b) }
+        if (eq($select.data('zelected'), item)) {
+          renderContent($selected, opts.renderItem(item))
+          $select.data('zelected', item)
+        }
+        var term = searchTerm()
+        $list.find('li').each(function() {
+          if (eq($(this).data('zelect-item'), item)) {
+            renderContent($(this), opts.renderItem(item, term)).data('zelect-item', item)
+          }
+        })
       }
 
       function toggle() {
@@ -101,12 +113,14 @@
         $zelect.removeClass('open')
       }
 
-      function htmlOrText(x) { return (x instanceof jQuery || x.nodeType != null) ? 'html' : 'text' }
+      function renderContent($obj, content) {
+        $obj[htmlOrText(content)](content)
+        return $obj
+        function htmlOrText(x) { return (x instanceof jQuery || x.nodeType != null) ? 'html' : 'text' }
+      }
 
       function appendItem(item, term) {
-        var rendered = opts.renderItem(item, term)
-        var $item = $('<li>').data('zelect-item', item)[htmlOrText(rendered)](rendered)
-        $list.append($item)
+        $list.append(renderContent($('<li>').data('zelect-item', item), opts.renderItem(item, term)))
       }
 
       function checkResults(term) {
@@ -117,6 +131,7 @@
           listNavigator.ensure()
         }
       }
+      function searchTerm() { return $.trim($search.val()) }
 
       function initialSelection() {
         var $s = $select.find('option[selected="selected"]')
@@ -205,6 +220,13 @@
     return this.each(function() {
       var zelectItemFn = $(this).data('zelectItem')
       zelectItemFn && zelectItemFn(item)
+    })
+  }
+
+  $.fn.refreshZelectItem = function(item, identityCheckFn) {
+    return this.each(function() {
+      var refreshItemFn = $(this).data('refreshItem')
+      refreshItemFn && refreshItemFn(item, identityCheckFn)
     })
   }
 
