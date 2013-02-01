@@ -91,6 +91,12 @@ If the zelect is &lt;select&gt;-backed, `$('select').val()` will return the _val
 `$('select').zelectItem(myNewItemThatIWantToSelectNow)` will do that. And fire an appropriate change event.
 
 
+## Programmatically Refreshing an Externally Updated Item
+
+`$('select').refreshZelectItem(myUpdatedItem, function(item) { return item._id })` will replace and rerender the item matching myUpdatedItem._id with the new version.
+
+No change events are fired.
+
 ## Styling
 
 zelect comes with **no** base css. Make your own.
