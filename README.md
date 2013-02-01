@@ -107,10 +107,11 @@ For inspiration, see <a href="http://mtkopone.github.com/zelect/">an example</a>
 ## Initial Selection
 
 When first rendered, zelect determines the initially selected item in this order:
-1. `opts.initial` if defined
-2. `<option selected="selected">` if `opts.loader` not defined
-3. Render placeholder text from `opts.placeholder` if defined
-4. Select the first option from the list
+
+1.  `opts.initial` if defined
+2.  `<option selected="selected">` if `opts.loader` not defined
+3.  Render placeholder text from `opts.placeholder` if defined
+4.  Select the first option from the list
 
 
 ## Custom Option Item Rendering Example
