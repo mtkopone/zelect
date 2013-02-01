@@ -1,5 +1,5 @@
 /*
-  zelect-0.0.2
+  zelect-0.0.3
 
   opts:
     throttle:       ms: delay to throttle filtering of results when search term updated, 0 means synchronous
