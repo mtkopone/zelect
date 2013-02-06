@@ -119,7 +119,7 @@ When first rendered, zelect determines the initially selected item in this order
 ```javascript
 $('select'.zelect({
   renderItem: function(item, term) {
-    return $('<span>').addClass('my-item').text(item.text).highlight(term)
+    return $('<span>').addClass('my-item').text(item.label).highlight(term)
   }
 })
 ```
@@ -167,7 +167,7 @@ function loader(term, page, callback) {
 function renderer(item, term) {
   return $('<div>')
     .append($('<img>').attr('src', item.img))
-    .append($('<span>').addClass('content').text(item.text))
+    .append($('<span>').addClass('content').text(item.label))
 }
 
 function noResultser(term) {
