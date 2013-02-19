@@ -97,6 +97,12 @@ If the zelect is &lt;select&gt;-backed, `$('select').val()` will return the _val
 
 No change events are fired.
 
+## Programmatically Resetting the Zelect
+
+`$('select').resetZelect()` will reset the query to an empty string, load the first results and select the first item.
+
+A change event will fire.
+
 ## Styling
 
 zelect comes with **no** base css. Make your own.
