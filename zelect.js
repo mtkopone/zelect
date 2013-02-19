@@ -26,7 +26,7 @@
     opts = $.extend({}, defaults, opts)
 
     return this.each(function() {
-      var $select = $(this).hide().data('zelectItem', selectItem).data('refreshItem', refreshItem)
+      var $select = $(this).hide().data('zelectItem', selectItem).data('refreshItem', refreshItem).data('reset', reset)
       var $zelect = $('<div>').addClass('zelect')
       var $selected = $('<div>').addClass('zelected')
       var $dropdown = $('<div>').addClass('dropdown').hide()
@@ -95,6 +95,13 @@
           if (eq($(this).data('zelect-item'), item)) {
             renderContent($(this), opts.renderItem(item, term)).data('zelect-item', item)
           }
+        })
+      }
+
+      function reset() {
+        $search.val('')
+        itemHandler.load('', function() {
+          initialSelection()
         })
       }
 
@@ -216,18 +223,18 @@
     return { load:newTerm, check:maybeLoadMore }
   }
 
-  $.fn.zelectItem = function(item) {
-    return this.each(function() {
-      var zelectItemFn = $(this).data('zelectItem')
-      zelectItemFn && zelectItemFn(item)
-    })
-  }
+  $.fn.zelectItem = callInstance('zelectItem')
+  $.fn.refreshZelectItem = callInstance('refreshItem')
+  $.fn.resetZelect = callInstance('reset')
 
-  $.fn.refreshZelectItem = function(item, identityCheckFn) {
-    return this.each(function() {
-      var refreshItemFn = $(this).data('refreshItem')
-      refreshItemFn && refreshItemFn(item, identityCheckFn)
-    })
+  function callInstance(fnName) {
+    return function() {
+      var args = [].slice.call(arguments)
+      return this.each(function() {
+        var fn = $(this).data(fnName)
+        fn && fn.apply(undefined, args)
+      })
+    }
   }
 
   function throttled(ms, callback) {

@@ -281,6 +281,18 @@ describe('zelect', function() {
       $('#sut').append($parent)
       defaultInitialState()
     })
+
+    it('$(select).reset()', function() {
+      setup('with-two-options')
+      $('#select').zelect()
+      $('.zelected').click()
+      $('.dropdown li:last').click()
+      val('#select', 'Last')
+      console.log('eh')
+      $('#select').resetZelect()
+      val('#select', 'First')
+      selectionIs('First', { label:'First', value:'First' })
+    })
   })
 
   describe('List navigation', function() {
