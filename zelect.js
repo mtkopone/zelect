@@ -64,6 +64,8 @@
       $list.on('click', 'li', function() { selectItem($(this).data('zelect-item')) })
       $zelect.mouseenter(function() { $zelect.addClass('hover') })
       $zelect.mouseleave(function() { $zelect.removeClass('hover') })
+      $zelect.attr("tabindex", $select.attr("tabindex"))
+      $zelect.blur(function() { if (!$zelect.hasClass('hover')) hide() })
       $search.blur(function() { if (!$zelect.hasClass('hover')) hide() })
 
       $selected.click(toggle)
