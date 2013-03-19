@@ -288,7 +288,6 @@ describe('zelect', function() {
       $('.zelected').click()
       $('.dropdown li:last').click()
       val('#select', 'Last')
-      console.log('eh')
       $('#select').resetZelect()
       val('#select', 'First')
       selectionIs('First', { label:'First', value:'First' })
