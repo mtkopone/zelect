@@ -224,6 +224,15 @@ describe('zelect', function() {
       assert.isTrue(changeChecked)
     })
 
+    it('can zelectItem without firing a change event', function() {
+      var item = { label:'Someone Else', data:'secret' }
+      setup('with-two-options')
+      $('#select').zelect()
+      $('#select').on('change', function() { assert.fail(1, 2, 'No change event should fire') })
+      $('#select').zelectItem(item, false)
+      selectionIs('Someone Else', item)
+    })
+
     it('can refresh an arbitrary item', function() {
       setup('with-two-options')
       function valueAsId(x) { return x.value }

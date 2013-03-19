@@ -83,8 +83,8 @@
         renderContent($selected, opts.renderItem(item)).removeClass('placeholder')
         hide()
         if (item && item.value) $select.val(item.value)
-        if (triggerChange == null || triggerChange === true)
-          $select.data('zelected', item).trigger('change', item)
+        $select.data('zelected', item)
+        if (triggerChange == null || triggerChange === true) $select.trigger('change', item)
       }
 
       function refreshItem(item, identityCheckFn) {

@@ -88,8 +88,9 @@ If the zelect is &lt;select&gt;-backed, `$('select').val()` will return the _val
 
 ## Programmatically Changing The Selection
 
-`$('select').zelectItem(myNewItemThatIWantToSelectNow)` will do that. And fire an appropriate change event.
+`$('select').zelectItem(myNewItemThatIWantToSelectNow, fireChangeEvent)` will do that.
 
+Whether a change event fires can be controlled with the `fireChangeEvent` boolean. The default is true.
 
 ## Programmatically Refreshing an Externally Updated Item
 
