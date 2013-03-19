@@ -79,11 +79,12 @@
         $select.trigger('ready')
       })
 
-      function selectItem(item) {
+      function selectItem(item, triggerChange) {
         renderContent($selected, opts.renderItem(item)).removeClass('placeholder')
         hide()
         if (item && item.value) $select.val(item.value)
-        $select.data('zelected', item).trigger('change', item)
+        if (triggerChange == null || triggerChange === true)
+          $select.data('zelected', item).trigger('change', item)
       }
 
       function refreshItem(item, identityCheckFn) {
