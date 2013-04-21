@@ -261,6 +261,15 @@ describe('zelect', function() {
       val('#select', 'second')
     })
 
+    it('allows empty string as an option value', function() {
+      setup('option-with-empty-string')
+      $('#select').zelect()
+      $('.zelected').click()
+      $('.dropdown li:last').click()
+      txt('.zelected', 'Has empty string as value')
+      val('#select', '')
+    })
+
     it('throttles search input', function(done) {
       setup('with-two-options-with-values')
       $('#select').zelect({
