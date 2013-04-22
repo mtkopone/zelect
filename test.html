@@ -52,6 +52,11 @@
       <option>Evil option &lt;script&gt;throw new Error('XSS from option label')&lt;/script&gt;</option>
       <option value="&lt;script&gt;throw new Error('XSS from option value')&lt;/script&gt;">Evil value</option>
     </select>
+    <select class="option-with-empty-string">
+      <option value="something">Has a value</option>
+      <option value="something-elese">Also has a value</option>
+      <option value="">Has empty string as value</option>
+    </select>
   </div>
 </body>
 </html>
