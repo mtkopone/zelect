@@ -300,6 +300,15 @@ describe('zelect', function() {
       defaultInitialState()
     })
 
+    it('throws an error if <select> does not have the required parent element', function() {
+      try {
+        $('<select>').zelect()
+      } catch (catched) {
+        var err = catched
+      }
+      eq(err && err.message, "jQuery.insertAfter cannot be done: <select> element must have a parent element")
+    })
+
     it('$(select).reset()', function() {
       setup('with-two-options')
       $('#select').zelect()

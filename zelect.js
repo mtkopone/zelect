@@ -70,6 +70,7 @@
 
       $selected.click(toggle)
 
+      if ($select.parent().length === 0) throw new Error('jQuery.insertAfter cannot be done: <select> element must have a parent element')
       $zelect.insertAfter($select)
         .append($selected)
         .append($dropdown.append($('<div>').addClass('zearch-container').append($search).append($noResults)).append($list))
