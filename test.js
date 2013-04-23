@@ -261,6 +261,15 @@ describe('zelect', function() {
       val('#select', 'second')
     })
 
+    it('allows empty string as an option value', function() {
+      setup('option-with-empty-string')
+      $('#select').zelect()
+      $('.zelected').click()
+      $('.dropdown li:last').click()
+      txt('.zelected', 'Has empty string as value')
+      val('#select', '')
+    })
+
     it('throttles search input', function(done) {
       setup('with-two-options-with-values')
       $('#select').zelect({
@@ -289,6 +298,15 @@ describe('zelect', function() {
       $parent.find('#select').zelect()
       $('#sut').append($parent)
       defaultInitialState()
+    })
+
+    it('throws an error if <select> does not have the required parent element', function() {
+      try {
+        $('<select>').zelect()
+      } catch (catched) {
+        var err = catched
+      }
+      eq(err && err.message, "jQuery.insertAfter cannot be done: <select> element must have a parent element")
     })
 
     it('$(select).reset()', function() {

@@ -70,6 +70,7 @@
 
       $selected.click(toggle)
 
+      if ($select.parent().length === 0) throw new Error('jQuery.insertAfter cannot be done: <select> element must have a parent element')
       $zelect.insertAfter($select)
         .append($selected)
         .append($dropdown.append($('<div>').addClass('zearch-container').append($search).append($noResults)).append($list))
@@ -82,7 +83,7 @@
       function selectItem(item, triggerChange) {
         renderContent($selected, opts.renderItem(item)).removeClass('placeholder')
         hide()
-        if (item && item.value) $select.val(item.value)
+        if (item && item.value !== undefined) $select.val(item.value)
         $select.data('zelected', item)
         if (triggerChange == null || triggerChange === true) $select.trigger('change', item)
       }
