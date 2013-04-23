@@ -300,13 +300,13 @@ describe('zelect', function() {
       defaultInitialState()
     })
 
-    it('throws an error if <select> does not have the required parent element', function() {
+    it('throws an error if <select> does not have a parent', function(done) {
       try {
         $('<select>').zelect()
-      } catch (catched) {
-        var err = catched
+      } catch (err) {
+        eq(err.message, '<select> element must have a parent')
+        done()
       }
-      eq(err && err.message, "jQuery.insertAfter cannot be done: <select> element must have a parent element")
     })
 
     it('$(select).reset()', function() {

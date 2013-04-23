@@ -26,7 +26,9 @@
     opts = $.extend({}, defaults, opts)
 
     return this.each(function() {
+      if ($(this).parent().length === 0) throw new Error('<select> element must have a parent')
       var $select = $(this).hide().data('zelectItem', selectItem).data('refreshItem', refreshItem).data('reset', reset)
+
       var $zelect = $('<div>').addClass('zelect')
       var $selected = $('<div>').addClass('zelected')
       var $dropdown = $('<div>').addClass('dropdown').hide()
@@ -70,7 +72,6 @@
 
       $selected.click(toggle)
 
-      if ($select.parent().length === 0) throw new Error('jQuery.insertAfter cannot be done: <select> element must have a parent element')
       $zelect.insertAfter($select)
         .append($selected)
         .append($dropdown.append($('<div>').addClass('zearch-container').append($search).append($noResults)).append($list))
