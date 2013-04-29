@@ -58,6 +58,59 @@ describe('zelect', function() {
     })
   })
 
+  describe('Initially selected item', function() {
+
+    it('First loaded item', function() {
+      setup('empty')
+      $('#select').zelect({ loader:function(term, page, callback) { return callback(['First','Second']) }})
+      selectionIs('First', 'First')
+    })
+
+    it('<option> with "selected"="selected"', function() {
+      setup('with-two-options-with-values')
+      $('#select option:last').attr('selected', 'selected')
+      $('#select').zelect()
+      val('#select', 'second')
+      selectionIs('Second', { value: 'second', label: 'Second' })
+    })
+
+    it('opts.placeholder', function() {
+      setup('with-two-options')
+      $('#select').zelect({ throttle:0, placeholder:$('<h2>').text('Plz zelect...') })
+      html('.zelected', '<h2>Plz zelect...</h2>')
+      hasClass('.zelected', 'placeholder')
+      $('.zelected').click()
+      $('.dropdown li:first').click()
+      noClass('.zelected', 'placeholder')
+    })
+
+    it('opts.initial', function() {
+      var initial = { label:'something completely different', value:'pow'}
+      var changeChecked = false
+      setup('with-two-options')
+      $('#select').on('change', function(e, item) {
+        eq(item, initial)
+        selectionIs('something completely different', initial)
+        changeChecked = true
+      })
+      $('#select').zelect({ initial:initial })
+      selectionIs('something completely different', initial)
+      // <select> val can't be changed to an option that doesnt exist:
+      val('#select', 'First')
+      assert.isTrue(changeChecked)
+    })
+
+    it('noResults fallback', function() {
+      setup('empty')
+      $('#select').zelect({
+        noResults: function() { return 'Sorry...' },
+        loader: function(term, page, callback) { return callback([]) }
+      })
+      html('.zelected', 'Sorry...')
+      hasClass('.zelected', 'placeholder')
+    })
+  })
+
   describe('Loader', function() {
     it('loads first results before "ready"', function(done) {
       setup('empty')
@@ -143,15 +196,6 @@ describe('zelect', function() {
   })
 
   describe('Customization', function() {
-    it('placeholder', function() {
-      setup('with-two-options')
-      $('#select').zelect({ throttle:0, placeholder:$('<h2>').text('Plz zelect...') })
-      html('.zelected', '<h2>Plz zelect...</h2>')
-      hasClass('.zelected', 'placeholder')
-      $('.zelected').click()
-      $('.dropdown li:first').click()
-      noClass('.zelected', 'placeholder')
-    })
 
     it('noResults', function() {
       setup('with-two-options')
@@ -189,22 +233,6 @@ describe('zelect', function() {
       items(['Last'])
       $('.zearch').val('s').keyup()
       items(['First', 'Last'])
-    })
-
-    it('can initially be set to an arbitrary item', function() {
-      var initial = { label:'something completely different', value:'pow'}
-      var changeChecked = false
-      setup('with-two-options')
-      $('#select').on('change', function(e, item) {
-        eq(item, initial)
-        selectionIs('something completely different', initial)
-        changeChecked = true
-      })
-      $('#select').zelect({ initial:initial })
-      selectionIs('something completely different', initial)
-      // <select> val can't be changed to an option that doesnt exist:
-      val('#select', 'First')
-      assert.isTrue(changeChecked)
     })
 
     it('can be set to an arbitrary item at any time', function() {
@@ -251,14 +279,6 @@ describe('zelect', function() {
         done()
       })
       $('#select').zelect({ loader:function(term, page, callback) { callback(['1','2']) } })
-    })
-
-    it('sets initial selection to selected option', function() {
-      setup('with-two-options-with-values')
-      $('#select option:last').attr('selected', 'selected')
-      $('#select').zelect()
-      txt('.zelected', 'Second')
-      val('#select', 'second')
     })
 
     it('allows empty string as an option value', function() {

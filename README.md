@@ -26,7 +26,7 @@ It's just yet another &lt;select&gt;.
   <tr><td>renderItem</td><td><code>item.label || item.toString()</code></td><td>function(item, term): String, DOM, jQuery, etc.</td><td>Function to render a single option item. See <a href="#custom-option-item-rendering-example">example</a></td></tr>
   <tr><td>initial</td><td><code>undefined</code></td><td><i>item</i></td><td>Initially selected item</td></tr>
   <tr><td>placeholder</td><td><code>undefined</code></td><td>String, DOM, jQuery, etc</td><td>Placeholder text or HTML to show when no initial selection. The first option item is selected by default if this is left undefined.</td></tr>
-  <tr><td>noResults</td><td>"No results for '$query'"</td><td>function(query): String, DOM, jQuery, etc.</td><td>Function to render a no-hits text.</td></tr>
+  <tr><td>noResults</td><td>"No results for '$query'"</td><td>function(query?): String, DOM, jQuery, etc.</td><td>Function to render a no-hits text.</td></tr>
   <tr><td>regexpMatcher</td><td><code>/(^|\s)term/i</code></td><td>function(term): RegExp</td><td>Function to create a RegExp to filter &lt;select&gt;-based options with.</td></tr>
 </table>
 
@@ -118,8 +118,8 @@ When first rendered, zelect determines the initially selected item in this order
 1.  `opts.initial` if defined
 2.  `<option selected="selected">` if `opts.loader` not defined
 3.  Render placeholder text from `opts.placeholder` if defined
-4.  Select the first option from the list
-
+4.  Select the first option from the list if there are items
+5.  Render noResults text without a term
 
 ## Custom Option Item Rendering Example
 

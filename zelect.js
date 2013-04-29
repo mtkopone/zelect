@@ -10,7 +10,7 @@
                       placeholder is not required if initial item is provided
     placeholder:    String/DOM/jQuery: placeholder text/html before anything is selected
                       zelect automatically selects first item if not provided
-    noResults:      function(term): function to create no results text
+    noResults:      function(term?): function to create no results text
     regexpMatcher:  function(term): override regexp creation when filtering options
 */
 (function($) {
@@ -154,7 +154,8 @@
         } else if (opts.placeholder) {
           $selected.html(opts.placeholder).addClass('placeholder')
         } else {
-          selectItem($list.find(':first').data('zelect-item'))
+          var first = $list.find(':first').data('zelect-item')
+          first !== undefined ? selectItem(first) : $selected.html(opts.noResults()).addClass('placeholder')
         }
         checkResults()
       }
