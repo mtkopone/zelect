@@ -51,7 +51,10 @@
           case keys.esc: hide(); return;
           case keys.up: return;
           case keys.down: return;
-          case keys.enter: selectItem(listNavigator.current().data('zelect-item')); return;
+          case keys.enter:
+            var curr = listNavigator.current().data('zelect-item')
+            if (curr) selectItem(curr)
+            return
           default: filter()
         }
       })

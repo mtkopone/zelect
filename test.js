@@ -345,6 +345,7 @@ describe('zelect', function() {
     beforeEach(function() {
       setup('empty')
       $('#select').zelect({ placeholder:'Nothing selected', throttle:0, loader:function(term, page, callback) {
+        if (term == 'no-results') return callback([])
         if (page >= 2) return callback([])
         callback(_.range(page*10, page*10+10))
       }})
@@ -361,6 +362,17 @@ describe('zelect', function() {
       keydown(keys.down)
       keyup(keys.enter)
       txt('.zelected', '1')
+    })
+
+    it('enter is a noop if no selection can be made', function() {
+      $('.zearch').val('no-results').keyup()
+      visible('.dropdown .no-results')
+      keydown(keys.enter)
+      keyup(keys.enter)
+      txt('.zelected', 'Nothing selected')
+      visible('.dropdown .no-results')
+      visible('.dropdown')
+      hasClass('.zelect', 'open')
     })
 
     it('moves selection on mouse enter', function() {
