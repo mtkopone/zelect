@@ -1,6 +1,6 @@
 {
   "name": "zelect",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "dependencies": {
     "jquery-browser": "1.8.x"
   },
