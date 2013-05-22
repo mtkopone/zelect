@@ -2,7 +2,13 @@
 <html>
 <head>
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-  <script src="./zelect.js"></script>
+  <script type="text/javascript">
+    $.getScript('http://raw.github.com/mtkopone/zelect/master/zelect.js', function(){
+      $(function(){
+        $('#intro select').zelect({ placeholder:'Plz select...' });
+      });
+    })
+  </script>
   <link rel="stylesheet" href="http://css.cdn.tl/normalize.css" />
   <style>
     body { font-size: 16px; color: #1e1f19; background-color: #f3f3f3; padding: 10px 20px; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; }
@@ -75,13 +81,6 @@
       margin-left: 10px;
     }
   </style>
-  <script>
-    $(setup)
-
-    function setup() {
-      $('#intro select').zelect({ placeholder:'Plz select...' })
-    }
-  </script>
 </head>
 <body>
   <section id="intro">
