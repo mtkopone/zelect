@@ -270,7 +270,7 @@
   }
 
   function defaultNoResults(term) {
-    return "No results for '"+term+"'"
+    return "No results for '"+(term || '')+"'"
   }
 
   function defaultRegexpMatcher(term) {
