@@ -184,7 +184,7 @@
       })
     }
     function itemFromOption($option) {
-      return { value: $option.attr('value'), label: $option.text(), disabled: $option.prop('disabled') }
+      return { value: $option.val(), label: $option.text(), disabled: $option.prop('disabled') }
     }
     function newTerm(term, callback) {
       filter(term)
