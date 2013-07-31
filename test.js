@@ -101,7 +101,7 @@ describe('zelect', function() {
       $('#select').zelect({ initial:initial })
       selectionIs('something completely different', initial)
       // <select> val can't be changed to an option that doesnt exist:
-      val('#select', 'First')
+      val('#select', null)
       assert.isTrue(changeChecked)
     })
 
