@@ -156,7 +156,7 @@
       function searchTerm() { return $.trim($search.val()) }
 
       function initialSelection(useOptsInitial) {
-        var $s = $select.find('option[selected="selected"]')
+        var $s = $select.find('option[selected]')
         if (useOptsInitial && opts.initial) {
           selectItem(opts.initial)
         } else if (!opts.loader && $s.size() > 0) {
