@@ -165,7 +165,7 @@
           $selected.html(opts.placeholder).addClass('placeholder')
         } else {
           var first = $list.find(':first').data('zelect-item')
-          first !== undefined ? selectItem(first) : $selected.html(opts.noResults()).addClass('placeholder')
+          first !== undefined && first !== null ? selectItem(first) : $selected.html(opts.noResults()).addClass('placeholder')
         }
         checkResults()
       }
