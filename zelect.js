@@ -12,6 +12,7 @@
                       zelect automatically selects first item if not provided
     noResults:      function(term?): function to create no results text
     regexpMatcher:  function(term): override regexp creation when filtering options
+    selectOnMouseEnter: set selection when hovering on an item
 */
 (function($) {
   var keys = { tab:9, enter:13, esc:27, left:37, up:38, right:39, down:40 }
@@ -19,7 +20,8 @@
     throttle: 300,
     renderItem: defaultRenderItem,
     noResults: defaultNoResults,
-    regexpMatcher: defaultRegexpMatcher
+    regexpMatcher: defaultRegexpMatcher,
+    selectOnMouseEnter: true
   }
 
   $.fn.zelect = function(opts) {
@@ -35,7 +37,7 @@
       var $noResults = $('<div>').addClass('no-results')
       var $search = $('<input>').addClass('zearch')
       var $list = $('<ol>')
-      var listNavigator = navigable($list)
+      var listNavigator = navigable($list, opts.selectOnMouseEnter)
 
       var itemHandler = opts.loader
         ? infiniteScroll($list, opts.loader, appendItem)
@@ -277,9 +279,13 @@
     return new RegExp('(^|\\s)'+term, 'i')
   }
 
-  function navigable($list) {
+  function navigable($list, selectOnMouseEnter) {
     var skipMouseEvent = false
-    $list.on('mouseenter', 'li', onMouseEnter)
+    if(selectOnMouseEnter) {
+      $list.on('mouseenter', 'li', onMouseEnter)
+    } else {
+      $list.on('click', 'li', onMouseClick)
+    }
 
     function next() {
       var $next = current().next('li')
@@ -310,6 +316,10 @@
       }
       set($(this))
     }
+    function onMouseClick() {
+      set($(this))
+    }
+
     function itemTop($item) {
       return $item.offset().top - $list.offset().top
     }

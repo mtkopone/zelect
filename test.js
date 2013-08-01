@@ -269,6 +269,13 @@ describe('zelect', function() {
       selectionIs('Updated First', newItem)
       items(['Updated First', 'Last'])
     })
+
+    it('selectOnMouseEnter: false does not move selection on mouse enter', function() {
+      setup('with-several-options')
+      $('#select').zelect({ selectOnMouseEnter: false })
+      $('.dropdown li:eq(3)').mouseenter(); eq($('.dropdown li.current').index(), 0)
+      $('.dropdown li:eq(1)').mouseenter(); eq($('.dropdown li.current').index(), 0)
+    })
   })
 
   describe('This and that', function() {
