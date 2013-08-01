@@ -68,7 +68,7 @@
         }
       })
 
-      $list.on('click', 'li', function() { selectItem($(this).data('zelect-item')) })
+      $list.on('click', 'li:not(.disabled)', function() { selectItem($(this).data('zelect-item')) })
       $zelect.mouseenter(function() { $zelect.addClass('hover') })
       $zelect.mouseleave(function() { $zelect.removeClass('hover') })
       $zelect.attr("tabindex", $select.attr("tabindex"))
@@ -137,7 +137,7 @@
       }
 
       function appendItem(item, term) {
-        $list.append(renderContent($('<li>').data('zelect-item', item), opts.renderItem(item, term)))
+        $list.append(renderContent($('<li>').data('zelect-item', item).toggleClass('disabled', !!item.disabled), opts.renderItem(item, term)))
       }
 
       function checkResults(term) {
@@ -179,7 +179,7 @@
       })
     }
     function itemFromOption($option) {
-      return { value: $option.attr('value'), label: $option.text() }
+      return { value: $option.attr('value'), label: $option.text(), disabled: $option.prop('disabled') }
     }
     function newTerm(term, callback) {
       filter(term)
@@ -282,17 +282,17 @@
   function navigable($list, selectOnMouseEnter) {
     var skipMouseEvent = false
     if(selectOnMouseEnter) {
-      $list.on('mouseenter', 'li', onMouseEnter)
+      $list.on('mouseenter', 'li:not(.disabled)', onMouseEnter)
     } else {
-      $list.on('click', 'li', onMouseClick)
+      $list.on('click', 'li:not(.disabled)', onMouseClick)
     }
 
     function next() {
-      var $next = current().next('li')
+      var $next = current().next('li:not(.disabled)')
       if (set($next)) ensureBottomVisible($next)
     }
     function prev() {
-      var $prev = current().prev('li')
+      var $prev = current().prev('li:not(.disabled)')
       if (set($prev)) ensureTopVisible($prev)
     }
     function current() {
@@ -300,7 +300,7 @@
     }
     function ensure() {
       if (current().size() === 0) {
-        $list.find('li:first').addClass('current')
+        $list.find('li:not(.disabled)').eq(0).addClass('current')
       }
     }
     function set($item) {
