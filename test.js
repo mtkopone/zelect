@@ -372,21 +372,9 @@ describe('zelect', function() {
       txt('.zelected', '1')
     })
 
-    it('enter is a noop if no selection can be made', function() {
-      $('.zearch').val('no-results').keyup()
-      visible('.dropdown .no-results')
-      keydown(keys.enter)
-      keyup(keys.enter)
-      txt('.zelected', 'Nothing selected')
-      visible('.dropdown .no-results')
-      visible('.dropdown')
-      hasClass('.zelect', 'open')
-    })
+    assertEnterIsNoOpWhenNoSelectionCanBeMade()
 
-    it('moves selection on mouse enter', function() {
-      $('.dropdown li:eq(3)').mouseenter(); eq($('.dropdown li.current').index(), 3)
-      $('.dropdown li:eq(1)').mouseenter(); eq($('.dropdown li.current').index(), 1)
-    })
+    assertMovesSelectionOnMouseEnter()
 
     it('moves up and down', function() {
       keydown(keys.down); eq($('.dropdown li.current').index(), 1)
@@ -400,15 +388,9 @@ describe('zelect', function() {
       eq($('.dropdown li.current').index(), 0)
     })
 
-    it("doesn't go down past last", function() {
-      go(keys.down)
-      eq($('.dropdown li.current').index(), 19)
-    })
+    assertDoesNotMovePastLast()
 
-    it('scrolls list up and down as necessary', function() {
-      go(keys.down); ok($('.dropdown ol').scrollTop() > 400)
-      go(keys.up);   eq($('.dropdown ol').scrollTop(), 0)
-    })
+    assertScrollsUpAndDown()
 
     it('skips first mouseenter after scroll', function() {
       go(keys.down);
@@ -427,14 +409,14 @@ describe('zelect', function() {
       keydown(keys.down);
       eq($('.dropdown li.current').index(), 1)
     })
-    function go(key) {
-      _.range(0, 25).forEach(function() { keydown(key); $('.dropdown ol').scroll() })
-    }
   })
 
   describe('navigation with disabled items', function() {
     beforeEach(function() {
-      setup('with-disabled-options')
+      setup('empty')
+      var options = _.range(0, 20).map(function(v) { return '<option>' + v + '</option>'})
+      $('#select').html(options)
+      $('#select').find('option').eq(0).prop('disabled', true)
       $('#select').zelect({ placeholder:'Nothing selected', throttle:0 })
       $('.zelect .dropdown ol').css({ height: '100px', 'overflow-y':'auto' })
       $('.zelected').click()
@@ -454,21 +436,9 @@ describe('zelect', function() {
       txt('.zelected', '2')
     })
 
-    it('enter is a noop if no selection can be made', function() {
-      $('.zearch').val('no-results').keyup()
-      visible('.dropdown .no-results')
-      keydown(keys.enter)
-      keyup(keys.enter)
-      txt('.zelected', 'Nothing selected')
-      visible('.dropdown .no-results')
-      visible('.dropdown')
-      hasClass('.zelect', 'open')
-    })
+    assertEnterIsNoOpWhenNoSelectionCanBeMade()
 
-    it('moves selection on mouse enter', function() {
-      $('.dropdown li:eq(2)').mouseenter(); eq($('.dropdown li.current').index(), 2)
-      $('.dropdown li:eq(1)').mouseenter(); eq($('.dropdown li.current').index(), 1)
-    })
+    assertMovesSelectionOnMouseEnter()
 
     it('does not move selection on mouse enter over a disabled item', function() {
       $('.dropdown li:eq(2)').mouseenter(); eq($('.dropdown li.current').index(), 2)
@@ -486,26 +456,64 @@ describe('zelect', function() {
       eq($('.dropdown li.current').index(), 1)
     })
 
-    it("doesn't go down past last", function() {
-      go(keys.down)
-      go(keys.down)
-      eq($('.dropdown li.current').index(), 2)
-    })
+    assertDoesNotMovePastLast()
+
+    assertScrollsUpAndDown(30)
 
     it('functions after filtering', function() {
       keydown(keys.down);
       keydown(keys.down);
-      eq($('.dropdown li.current').index(), 2)
+      eq($('.dropdown li.current').index(), 3)
       $('.zearch').val('xxx').keyup()
       eq($('.dropdown li.current').index(), -1)
       $('.zearch').val('').keyup()
       keydown(keys.down);
       eq($('.dropdown li.current').index(), 2)
     })
+  })
+
+    function assertScrollsUpAndDown(firstEnabledItemScrollTop) {
+      firstEnabledItemScrollTop = firstEnabledItemScrollTop || 0
+      it('scrolls list up and down as necessary', function() {
+        go(keys.down);
+        ok($('.dropdown ol').scrollTop() > 400)
+        go(keys.up);
+        eq($('.dropdown ol').scrollTop(), firstEnabledItemScrollTop)
+      })
+    }
+
+    function assertEnterIsNoOpWhenNoSelectionCanBeMade() {
+      it('enter is a noop if no selection can be made', function() {
+        $('.zearch').val('no-results').keyup()
+        visible('.dropdown .no-results')
+        keydown(keys.enter)
+        keyup(keys.enter)
+        txt('.zelected', 'Nothing selected')
+        visible('.dropdown .no-results')
+        visible('.dropdown')
+        hasClass('.zelect', 'open')
+      })
+    }
+
+    function assertMovesSelectionOnMouseEnter() {
+      it('moves selection on mouse enter', function() {
+        $('.dropdown li:eq(3)').mouseenter();
+        eq($('.dropdown li.current').index(), 3)
+        $('.dropdown li:eq(1)').mouseenter();
+        eq($('.dropdown li.current').index(), 1)
+      })
+    }
+
+    function assertDoesNotMovePastLast() {
+      it("doesn't go down past last", function() {
+        go(keys.down)
+        eq($('.dropdown li.current').index(), 19)
+      })
+    }
+
     function go(key) {
       _.range(0, 25).forEach(function() { keydown(key); $('.dropdown ol').scroll() })
     }
-  })
   })
 
 
