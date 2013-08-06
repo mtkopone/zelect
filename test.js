@@ -348,7 +348,8 @@ describe('zelect', function() {
     })
   })
 
-  describe('List navigation', function() {
+  describe('List', function() {
+  describe('navigation', function() {
     beforeEach(function() {
       setup('empty')
       $('#select').zelect({ placeholder:'Nothing selected', throttle:0, loader:function(term, page, callback) {
@@ -431,7 +432,7 @@ describe('zelect', function() {
     }
   })
 
-  describe('List navigation with disabled items', function() {
+  describe('navigation with disabled items', function() {
     beforeEach(function() {
       setup('with-disabled-options')
       $('#select').zelect({ placeholder:'Nothing selected', throttle:0 })
@@ -504,6 +505,7 @@ describe('zelect', function() {
     function go(key) {
       _.range(0, 25).forEach(function() { keydown(key); $('.dropdown ol').scroll() })
     }
+  })
   })
 
 
