@@ -37,7 +37,7 @@
       var $noResults = $('<div>').addClass('no-results')
       var $search = $('<input>').addClass('zearch')
       var $list = $('<ol>')
-      var listNavigator = navigable($list, opts.selectOnMouseEnter)
+      var listNavigator = navigable($list, opts.selectOnMouseEnter, $select)
 
       var itemHandler = opts.loader
         ? infiniteScroll($list, opts.loader, appendItem)
@@ -279,7 +279,7 @@
     return new RegExp('(^|\\s)'+term, 'i')
   }
 
-  function navigable($list, selectOnMouseEnter) {
+  function navigable($list, selectOnMouseEnter, $select) {
     var skipMouseEvent = false
     if(selectOnMouseEnter) {
       $list.on('mouseenter', 'li:not(.disabled)', onMouseEnter)
@@ -300,7 +300,12 @@
     }
     function ensure() {
       if (current().size() === 0) {
-        $list.find('li:not(.disabled)').eq(0).addClass('current')
+        var selected = $select.data('zelected')
+        if (selected) {
+          $list.find('li:not(.disabled):contains('+selected.value+')').addClass('current')
+        } else {
+          $list.find('li:not(.disabled)').eq(0).addClass('current')
+        }
       }
     }
     function set($item) {
