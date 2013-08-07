@@ -77,6 +77,11 @@
 
       $selected.click(toggle)
 
+      $('body').on('click.closeZelect', function(evt) {
+        var clickWasOutsideZelect = $(evt.target).closest($zelect).length === 0
+        if (clickWasOutsideZelect) hide()
+      })
+
       $zelect.insertAfter($select)
         .append($selected)
         .append($dropdown.append($('<div>').addClass('zearch-container').append($search).append($noResults)).append($list))

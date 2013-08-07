@@ -56,6 +56,11 @@ describe('zelect', function() {
       keydown(keys.tab)
       hidden('.dropdown')
     })
+    it('closes dropdown on click outside of zelect', function() {
+      $('.zelected').click()
+      $('body').click()
+      hidden('.dropdown')
+    })
   })
 
   describe('Initially selected item', function() {
