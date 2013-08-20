@@ -149,11 +149,11 @@
       function searchTerm() { return $.trim($search.val()) }
 
       function initialSelection(useOptsInitial) {
-        var $s = $select.find('option[selected="selected"]')
+        var $s = $select.find('option:selected')
         if (useOptsInitial && opts.initial) {
-          selectItem(opts.initial)
+          selectItem(opts.initial, false)
         } else if (!opts.loader && $s.size() > 0) {
-          selectItem($list.children().eq($s.index()).data('zelect-item'))
+          selectItem($list.children().eq($s.index()).data('zelect-item'), false)
         } else if (opts.placeholder) {
           $selected.html(opts.placeholder).addClass('placeholder')
         } else {
