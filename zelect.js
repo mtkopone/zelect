@@ -32,6 +32,7 @@
       var $zelect = $('<div>').addClass('zelect')
       var $selected = $('<div>').addClass('zelected')
       var $dropdown = $('<div>').addClass('dropdown').hide()
+      var $focusCatcher = $('<input>').addClass('focuz').css({ height: 0, width: 0, border: 'none', display: 'block', padding: 0 })
       var $noResults = $('<div>').addClass('no-results')
       var $search = $('<input>').addClass('zearch')
       var $list = $('<ol>')
@@ -60,7 +61,7 @@
       })
       $search.keydown(function(e) {
         switch (e.which) {
-          case keys.tab: e.preventDefault(); hide(); return;
+          case keys.tab: hide(); return;
           case keys.up: e.preventDefault(); listNavigator.prev(); return;
           case keys.down: e.preventDefault(); listNavigator.next(); return;
         }
@@ -69,12 +70,15 @@
       $list.on('click', 'li', function() { selectItem($(this).data('zelect-item')) })
       $zelect.mouseenter(function() { $zelect.addClass('hover') })
       $zelect.mouseleave(function() { $zelect.removeClass('hover') })
-      $zelect.attr("tabindex", $select.attr("tabindex"))
+      $search.attr("tabindex", $select.attr("tabindex"))
+      $focusCatcher.attr("tabindex", $select.attr("tabindex"))
       $zelect.blur(function() { if (!$zelect.hasClass('hover')) hide() })
       $search.blur(function() { if (!$zelect.hasClass('hover')) hide() })
 
       $selected.click(toggle)
+      $focusCatcher.focus(toggle)
 
+      $focusCatcher.insertBefore($select)
       $zelect.insertAfter($select)
         .append($selected)
         .append($dropdown.append($('<div>').addClass('zearch-container').append($search).append($noResults)).append($list))
@@ -115,6 +119,7 @@
 
       function toggle() {
         $dropdown.toggle()
+        $focusCatcher.hide()
         $zelect.toggleClass('open')
         if ($dropdown.is(':visible')) {
           $search.focus().select()
@@ -126,6 +131,7 @@
       function hide() {
         $dropdown.hide()
         $zelect.removeClass('open')
+        setTimeout(function(){ $focusCatcher.show() }, 0)
       }
 
       function renderContent($obj, content) {

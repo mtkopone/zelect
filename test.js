@@ -472,6 +472,17 @@ describe('zelect', function() {
     })
   })
 
+  describe('Catching tab focus', function() {
+    beforeEach(function() {
+      setup('multiple-fields')
+      $('#select').find('.field2').zelect()
+    })
+    it('focusing on catcher element opens search', function() {
+      $('#select').find('.focuz').focus()
+      defaultOpenState()
+    })
+  })
+
   function ok(bool, msg) {
     assert.isTrue(bool, msg)
   }

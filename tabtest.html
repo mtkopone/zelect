@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Tabbing test</title>
+  <script src="node_modules/jquery-browser/lib/jquery.js"></script>
+  <script src="zelect.js"></script>
+</head>
+<body>
+  <h2>With <code>tabindex</code></h2>
+  <p><input type="text" class="field1" tabindex="1" /></p>
+  <p><select class="field2" tabindex="2">
+    <option>First</option>
+    <option>Last</option>
+  </select></p>
+  <p><input type="text" class="field3" tabindex="3" /></p>
+  <h2>Without <code>tabindex</code></h2>
+  <p><input type="text" class="field1" /></p>
+  <p><select class="field2">
+    <option>First</option>
+    <option>Last</option>
+  </select></p>
+  <p><input type="text" class="field3" /></p>
+  <script>
+    $('select').zelect()
+  </script>
+</body>
+</html>
