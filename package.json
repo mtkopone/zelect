@@ -2,7 +2,7 @@
   "name": "zelect",
   "version": "0.0.9",
   "dependencies": {
-    "jquery-browser": "1.8.x"
+    "jquery-browser": "1.10.x"
   },
   "devDependencies": {
     "mocha": "1.7.x",

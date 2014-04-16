@@ -48,6 +48,12 @@
       <option value="first">First</option>
       <option value="second">Second</option>
     </select>
+    <select class="with-disabled-options">
+      <option disabled>0</option>
+      <option>1</option>
+      <option>2</option>
+      <option>3</option>
+    </select>
     <select class="xss-payload">
       <option>Evil option &lt;script&gt;throw new Error('XSS from option label')&lt;/script&gt;</option>
       <option value="&lt;script&gt;throw new Error('XSS from option value')&lt;/script&gt;">Evil value</option>
