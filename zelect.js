@@ -333,4 +333,4 @@
     }
     return { next:next, prev:prev, current:current, ensure:ensure }
   }
-})(jQuery)
+})(jQuery);
