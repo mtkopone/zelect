@@ -1,0 +1,25 @@
+{
+  "name": "zelect2",
+  "version": "0.1.1",
+  "homepage": "https://github.com/limonte/zelect2",
+  "authors": [
+    "Limon Monte <limon.monte@gmail.com>"
+  ],
+  "description": "From <select> to something more",
+  "main": "zelect.js",
+  "moduleType": [
+    "globals"
+  ],
+  "keywords": [
+    "select",
+    "zelect"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
